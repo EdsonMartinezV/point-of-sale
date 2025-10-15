@@ -9,7 +9,8 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void{
+    public function up(): void
+    {
         Schema::create('role_user', function (Blueprint $table) {
             $table->id();
             $table->foreignId('role_id')
@@ -25,7 +26,8 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down(): void{
+    public function down(): void
+    {
         Schema::dropIfExists('role_user');
     }
 };
