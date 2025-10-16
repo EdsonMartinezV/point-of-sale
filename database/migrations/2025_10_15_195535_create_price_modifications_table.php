@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('price_modifications', function (Blueprint $table) {
             $table->id();
+            $table->boolean('current')->default(true);
             $table->boolean('sold_separetely')->default(false);
             $table->decimal('cost_price', 10, 2)->nullable();
             $table->decimal('first_wholesale_percentage', 0, 2)->nullable();

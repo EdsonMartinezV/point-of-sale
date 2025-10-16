@@ -45,6 +45,10 @@ class Product extends Model
         return $this->hasMany(PriceModification::class);
     }
 
+    public function latestPriceModification(){
+        return $this->hasOne(PriceModification::class)->latestOfMany();
+    }
+
     public function saleItems(): HasMany{
         return $this->hasMany(SaleItem::class);
     }
