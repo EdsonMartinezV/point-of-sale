@@ -24,6 +24,14 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function measureUnit(): BelongsTo{
+        return $this->belongsTo(MeasureUnit::class);
+    }
+
+    public function retailMeasureUnit(): BelongsTo{
+        return $this->belongsTo(MeasureUnit::class, 'retail_measure_unit_id');
+    }
+
     public function purchaseItems(): HasMany{
         return $this->hasMany(PurchaseItem::class);
     }
