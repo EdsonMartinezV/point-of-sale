@@ -13,11 +13,16 @@ class Product extends Model
 
     protected $fillable = [
         'name',
+        'sold_separetely',
         'stock',
         'cost_price',
-        'first_sale_percentage',
-        'second_sale_percentage',
-        'third_sale_percentage',
+        'first_wholesale_percentage',
+        'second_wholesale_percentage',
+        'third_wholesale_percentage',
+        'retail_percentage',
+        'category_id',
+        'measure_unit_id',
+        'retail_measure_unit_id',
     ];
 
     public function category(): BelongsTo{
