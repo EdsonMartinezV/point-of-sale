@@ -3,6 +3,9 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Roles;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -37,6 +40,12 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    protected $appends = [
+        'is_admin',
+        'is_owner',
+        'is_cashier',
+    ];
+
     /**
      * Get the attributes that should be cast.
      *
@@ -50,7 +59,33 @@ class User extends Authenticatable
         ];
     }
 
+    protected function isAdmin(): Attribute{
+        return new Attribute(
+            get: fn () => $this->roles->filter(function ($role) {
+                return $role->description === Roles::ADMIN->value;
+            })->count() === 1
+        );
+    }
+
+    protected function isOwner(): Attribute{
+        return new Attribute(
+            get: fn () => $this->roles->filter(function ($role) {
+                return $role->description === Roles::OWNER->value;
+            })->count() === 1
+        );
+    }
+
+    protected function isCashier(): Attribute{
+        return new Attribute(
+            get: fn () => $this->roles->filter(function ($role) {
+                return $role->description === Roles::CASHIER->value;
+            })->count() === 1
+        );
+    }
+
     public function roles(): BelongsToMany{
         return $this->belongsToMany(Role::class);
     }
+
+
 }
