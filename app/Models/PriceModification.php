@@ -12,7 +12,9 @@ class PriceModification extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'current',
+        'is_current',
+        'remaining_stock',
+        'remaining_retail_stock',
         'sold_separetely',
         'cost_price',
         'first_wholesale_percentage',
