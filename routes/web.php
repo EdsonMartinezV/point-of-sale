@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\MeasureUnitController;
+use App\Http\Controllers\ProviderController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome');
@@ -30,4 +31,12 @@ Route::middleware(['auth'])->prefix('measure-units')->controller(MeasureUnitCont
     Route::post('/', 'store')->name('measure-units.store');
     Route::put('/{id}', 'update')->name('measure-units.update');
     Route::delete('/{id}', 'destroy')->name('measure-units.destroy');
+});
+
+Route::middleware(['auth'])->prefix('providers')->controller(ProviderController::class)->group(function () {
+    Route::get('/', 'index')->name('providers.index');
+    Route::get('/{id}', 'show')->name('providers.show');
+    Route::post('/', 'store')->name('providers.store');
+    Route::put('/{id}', 'update')->name('providers.update');
+    Route::delete('/{id}', 'destroy')->name('providers.destroy');
 });
