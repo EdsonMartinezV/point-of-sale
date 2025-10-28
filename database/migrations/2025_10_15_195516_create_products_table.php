@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->boolean('sold_separetely')->default(false);
+            $table->integer('retail_units_per_box')->default(0);
             $table->integer('stock')->default(0);
+            $table->integer('retail_remaining_stock')->default(0);
             $table->decimal('cost_price', 10, 2)->nullable();
             $table->decimal('first_wholesale_percentage', 0, 2)->nullable();
             $table->decimal('second_wholesale_percentage', 0, 2)->nullable();

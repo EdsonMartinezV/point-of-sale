@@ -14,7 +14,9 @@ class Product extends Model
     protected $fillable = [
         'name',
         'sold_separetely',
+        'retail_units_per_box',
         'stock',
+        'retail_remaining_stock',
         'cost_price',
         'first_wholesale_percentage',
         'second_wholesale_percentage',
