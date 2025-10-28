@@ -10,44 +10,36 @@ use Inertia\Inertia;
 
 class CategoryController extends Controller
 {
-    // Display a listing of the categories
-    public function index()
-    {
+    public function index() {
         $categories = Category::all();
         return Inertia::render('Categories/Index', [
             'categories' => $categories
         ]);
     }
 
-    // Display the specified category
-    public function show($id)
-    {
+    public function show($id) {
         $category = Category::findOrFail($id);
         return Inertia::render('Categories/Show', [
             'category' => $category
         ]);
     }
 
-    // Store a newly created category in storage
-    public function store(StoreCategoryRequest $request)
-    {
-        $category = Category::create($request->validated());
-        return redirect()->route('categories.index')->with('success', 'Category created successfully.');
+    public function store(StoreCategoryRequest $request) {
+        $validated = $request->validated();
+        Category::create($validated);
+        return redirect()->route('categories.index')->with('success', 'Categoria creada con éxito.');
     }
 
-    // Update the specified category in storage
-    public function update(UpdateCategoryRequest $request, $id)
-    {
+    public function update(UpdateCategoryRequest $request, $id) {
         $category = Category::findOrFail($id);
-        $category->update($request->validated());
-        return redirect()->route('categories.index')->with('success', 'Category updated successfully.');
+        $validated = $request->validated();
+        $category->update($validated);
+        return redirect()->route('categories.index')->with('success', 'Categoria actualizada con éxito.');
     }
 
-    // Remove the specified category from storage
-    public function destroy($id)
-    {
+    public function destroy($id) {
         $category = Category::findOrFail($id);
         $category->delete();
-        return redirect()->route('categories.index')->with('success', 'Category deleted successfully.');
+        return redirect()->route('categories.index')->with('success', 'Categoria eliminada con éxito.');
     }
 }
