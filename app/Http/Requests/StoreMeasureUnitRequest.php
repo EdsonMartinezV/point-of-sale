@@ -2,12 +2,13 @@
 
 namespace App\Http\Requests;
 
+use App\Models\MeasureUnit;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreMeasureUnitRequest extends FormRequest
 {
     public function authorize(): bool {
-        return true;
+        return $this->user()->can('create', MeasureUnit::class);
     }
 
     public function rules(): array {
