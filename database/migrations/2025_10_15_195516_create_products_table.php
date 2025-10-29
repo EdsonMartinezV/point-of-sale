@@ -14,14 +14,14 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->boolean('sold_separetely')->default(false);
-            $table->integer('retail_units_per_box')->default(0);
+            $table->boolean('sold_by_retail')->default(false);
+            $table->integer('retail_units_per_box')->nullable();
             $table->integer('stock')->default(0);
-            $table->integer('retail_remaining_stock')->default(0);
+            $table->integer('retail_remaining_stock')->nullable();
             $table->decimal('cost_price', 10, 2)->nullable();
-            $table->decimal('first_wholesale_percentage', 0, 2)->nullable();
-            $table->decimal('second_wholesale_percentage', 0, 2)->nullable();
-            $table->decimal('third_wholesale_percentage', 0, 2)->nullable();
+            $table->decimal('first_wholesale_percentage', 0, 2)->default(0.10);
+            $table->decimal('second_wholesale_percentage', 0, 2)->default(0.08);
+            $table->decimal('third_wholesale_percentage', 0, 2)->default(0.05);
             $table->decimal('retail_percentage', 0, 2)->nullable();
             $table->foreignId('category_id')
                 ->constrained()

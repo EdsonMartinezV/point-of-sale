@@ -5,6 +5,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\MeasureUnitController;
 use App\Http\Controllers\ProviderController;
+use App\Http\Controllers\ProductController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome');
@@ -39,4 +40,12 @@ Route::middleware(['auth'])->prefix('providers')->controller(ProviderController:
     Route::post('/', 'store')->name('providers.store');
     Route::put('/{id}', 'update')->name('providers.update');
     Route::delete('/{id}', 'destroy')->name('providers.destroy');
+});
+
+Route::middleware(['auth'])->prefix('products')->controller(ProductController::class)->group(function () {
+    Route::get('/', 'index')->name('products.index');
+    Route::get('/{id}', 'show')->name('products.show');
+    Route::post('/', 'store')->name('products.store');
+    Route::put('/{id}', 'update')->name('products.update');
+    Route::delete('/{id}', 'destroy')->name('products.destroy');
 });
