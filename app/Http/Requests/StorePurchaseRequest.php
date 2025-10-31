@@ -23,10 +23,10 @@ class StorePurchaseRequest extends FormRequest
             'purchase_items.*.sold_by_retail' => ['required', 'boolean'],
             'purchase_items.*.retail_units_per_box' => ['required', 'integer', 'min:1'],
             'purchase_items.*.cost_price' => ['required', 'numeric', 'min:0'],
-            'purchase_items.*.first_wholesale_percentage' => ['required', 'integer', 'min:0'],
-            'purchase_items.*.second_wholesale_percentage' => ['required', 'integer', 'min:0'],
-            'purchase_items.*.third_wholesale_percentage' => ['required', 'integer', 'min:0'],
-            'purchase_items.*.retail_percentage' => ['required_if:sold_by_retail,true', 'integer', 'min:0'],
+            'purchase_items.*.first_wholesale_percentage' => ['required', 'integer', 'min:1'],
+            'purchase_items.*.second_wholesale_percentage' => ['required', 'integer', 'min:1'],
+            'purchase_items.*.third_wholesale_percentage' => ['required', 'integer', 'min:1'],
+            'purchase_items.*.retail_percentage' => ['required_if:sold_by_retail,true', 'integer', 'min:1'],
             /* PRODUCTS FIELDS ALONG PREVIOUS FIELDS */
         ];
     }
