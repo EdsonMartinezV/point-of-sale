@@ -37,7 +37,10 @@ class PurchaseController extends Controller
             'provider_id' => $validated['provider_id'],
         ]);
 
+        $purchaseTotal = 0;
+
         foreach ($validated['purchase_items'] as $item) {
+            $purchaseTotal += $item['quantity'] * $item['cost_price'];
             $product = Product::find($item['product_id']);
 
             $purchaseItem = PurchaseItem::create([
@@ -87,6 +90,10 @@ class PurchaseController extends Controller
                 'stock' => $product->stock + $item['quantity'],
             ]);
         }
+
+        $purchase->update([
+            'total' => $purchaseTotal
+        ]);
 
         return redirect()->route('purchases.index')->with('success', 'Compra creada exitosamente.');
     }
