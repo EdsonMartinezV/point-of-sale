@@ -13,9 +13,10 @@ class PriceModification extends Model
 
     protected $fillable = [
         'is_current',
+        'sold_by_retail',
+        'retail_units_per_box',
         'remaining_stock',
-        'remaining_retail_stock',
-        'sold_separetely',
+        'retail_remaining_stock',
         'cost_price',
         'first_wholesale_percentage',
         'second_wholesale_percentage',

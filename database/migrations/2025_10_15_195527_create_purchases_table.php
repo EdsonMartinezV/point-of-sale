@@ -14,8 +14,6 @@ return new class extends Migration
         Schema::create('purchases', function (Blueprint $table) {
             $table->id();
             $table->decimal('total', 10, 2);
-            $table->decimal('paid_amount', 10, 2);
-            $table->decimal('change_amount', 10, 2);
             $table->foreignId('user_id')
                 ->constrained()
                 ->onUpdate('cascade');
@@ -23,6 +21,7 @@ return new class extends Migration
                 ->constrained()
                 ->onUpdate('cascade');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

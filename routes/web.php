@@ -6,6 +6,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\MeasureUnitController;
 use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\PurchaseController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome');
@@ -48,4 +49,12 @@ Route::middleware(['auth'])->prefix('products')->controller(ProductController::c
     Route::post('/', 'store')->name('products.store');
     Route::put('/{id}', 'update')->name('products.update');
     Route::delete('/{id}', 'destroy')->name('products.destroy');
+});
+
+Route::middleware(['auth'])->prefix('purchases')->controller(PurchaseController::class)->group(function () {
+    Route::get('/', 'index')->name('purchases.index');
+    Route::get('/{id}', 'show')->name('purchases.show');
+    Route::post('/', 'store')->name('purchases.store');
+    Route::put('/{id}', 'update')->name('purchases.update');
+    Route::delete('/{id}', 'destroy')->name('purchases.destroy');
 });
