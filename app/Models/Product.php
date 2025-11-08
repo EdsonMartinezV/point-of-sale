@@ -31,11 +31,18 @@ class Product extends Model
 
     protected $appends = [
         'total_retail_remaining_stock',
+        'current_price_modification',
     ];
 
     protected function totalRetailRemainingStock(): Attribute{
         return new Attribute(
             get: fn () => $this->sold_by_retail ? ($this->stock * $this->retail_units_per_box) + $this->retail_remaining_stock : null,
+        );
+    }
+
+    protected function currentPriceModification(): Attribute{ 
+        return new Attribute(
+            get: fn () => $this->priceModifications()->where('is_current', true)->first()
         );
     }
 

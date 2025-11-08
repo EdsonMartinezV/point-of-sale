@@ -45,6 +45,7 @@ Route::middleware(['auth'])->prefix('/providers')->controller(ProviderController
 });
 
 Route::middleware(['auth'])->prefix('/products')->controller(ProductController::class)->group(function () {
+    Route::get('/search', 'search')->name('products.search');
     Route::get('/', 'index')->name('products.index');
     Route::get('/{id}', 'show')->name('products.show');
     Route::post('/', 'store')->name('products.store');

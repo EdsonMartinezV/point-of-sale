@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use App\Http\Resources\ProductResource;
 use Inertia\Inertia;
 
 class ProductController extends Controller
@@ -21,6 +22,27 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         return Inertia::render('Products/Show', [
             'product' => $product
+        ]);
+    }
+
+    public function search(Request $request) {
+        $q = trim((string) $request->query('q', ''));
+
+        $query = Product::query();
+        if ($q !== '') {
+            $query->where('name', 'like', "%$q%");
+        }
+
+        $products = $query->limit(50)->get();
+
+        // If request expects JSON (AJAX), return JSON; otherwise render Inertia view
+        if ($request->wantsJson() || $request->ajax()) {
+            return ProductResource::collection($products);
+        }
+
+        return Inertia::render('Products/Index', [
+            'products' => $products,
+            'search' => $q,
         ]);
     }
 
@@ -42,4 +64,6 @@ class ProductController extends Controller
         $product->delete();
         return redirect()->route('products.index')->with('success', 'Producto eliminado exitosamente.');
     }
+
+
 }
