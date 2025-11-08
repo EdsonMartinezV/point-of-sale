@@ -2,15 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ImportProductsRequest;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\ProductResource;
+use App\Imports\ProductsImport;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
 {
+    public function importForm(Request $request) {
+        return Inertia::render('Products/Import');
+    }
+
+    public function import(ImportProductsRequest $request) {
+        $validated = $request->validated();
+        $file = $validated['file'];
+
+        Excel::import(new ProductsImport, $file);
+
+        return redirect()->route('products.index')->with('success', 'Productos importados exitosamente.');
+    }
+
     public function index() {
         $products = Product::all();
         return Inertia::render('Products/Index', [

@@ -42,4 +42,8 @@ class ProductPolicy
     public function forceDelete(User $user, Product $product): bool {
         return $user->isCashier();
     }
+
+    public function import(User $user): bool {
+        return false;
+    }
 }

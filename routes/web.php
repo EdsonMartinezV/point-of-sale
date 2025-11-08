@@ -46,8 +46,10 @@ Route::middleware(['auth'])->prefix('/providers')->controller(ProviderController
 
 Route::middleware(['auth'])->prefix('/products')->controller(ProductController::class)->group(function () {
     Route::get('/search', 'search')->name('products.search');
+    Route::get('/import', 'importForm')->name('products.import');
     Route::get('/', 'index')->name('products.index');
     Route::get('/{id}', 'show')->name('products.show');
+    Route::post('/import', 'import')->name('products.import.process');
     Route::post('/', 'store')->name('products.store');
     Route::put('/{id}', 'update')->name('products.update');
     Route::delete('/{id}', 'destroy')->name('products.destroy');
