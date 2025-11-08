@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -27,6 +28,16 @@ class Product extends Model
         'measure_unit_id',
         'retail_measure_unit_id',
     ];
+
+    protected $appends = [
+        'total_retail_remaining_stock',
+    ];
+
+    protected function totalRetailRemainingStock(): Attribute{
+        return new Attribute(
+            get: fn () => $this->sold_by_retail ? ($this->stock * $this->retail_units_per_box) + $this->retail_remaining_stock : null,
+        );
+    }
 
     public function category(): BelongsTo{
         return $this->belongsTo(Category::class);

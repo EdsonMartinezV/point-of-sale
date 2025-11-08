@@ -1,5 +1,6 @@
 <?php
 
+use App\Percentages;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,6 +15,9 @@ return new class extends Migration
         Schema::create('sale_items', function (Blueprint $table) {
             $table->id();
             $table->integer('quantity');
+            $table->boolean('is_retail_sale')->default(false);
+            $table->enum('selected_percentage', array_column(Percentages::cases(), 'value'))->default('first_wholesome_percentage');
+            $table->decimal('total', 10, 2);
             $table->foreignId('sale_id')
                 ->constrained()
                 ->onUpdate('cascade');

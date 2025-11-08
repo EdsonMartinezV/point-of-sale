@@ -12,6 +12,7 @@ class Sale extends Model
     use SoftDeletes;
 
     protected $fillable = [
+        'client',
         'total',
         'paid_amount',
         'change_amount',

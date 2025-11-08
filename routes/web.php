@@ -7,6 +7,7 @@ use App\Http\Controllers\MeasureUnitController;
 use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\SaleController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome');
@@ -19,7 +20,7 @@ Route::get('dashboard', function () {
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
 
-Route::middleware(['auth'])->prefix('categories')->controller(CategoryController::class)->group(function () {
+Route::middleware(['auth'])->prefix('/categories')->controller(CategoryController::class)->group(function () {
     Route::get('/', 'index')->name('categories.index');
     Route::get('/{id}', 'show')->name('categories.show');
     Route::post('/', 'store')->name('categories.store');
@@ -27,7 +28,7 @@ Route::middleware(['auth'])->prefix('categories')->controller(CategoryController
     Route::delete('/{id}', 'destroy')->name('categories.destroy');
 });
 
-Route::middleware(['auth'])->prefix('measure-units')->controller(MeasureUnitController::class)->group(function () {
+Route::middleware(['auth'])->prefix('/measure-units')->controller(MeasureUnitController::class)->group(function () {
     Route::get('/', 'index')->name('measure-units.index');
     Route::get('/{id}', 'show')->name('measure-units.show');
     Route::post('/', 'store')->name('measure-units.store');
@@ -35,7 +36,7 @@ Route::middleware(['auth'])->prefix('measure-units')->controller(MeasureUnitCont
     Route::delete('/{id}', 'destroy')->name('measure-units.destroy');
 });
 
-Route::middleware(['auth'])->prefix('providers')->controller(ProviderController::class)->group(function () {
+Route::middleware(['auth'])->prefix('/providers')->controller(ProviderController::class)->group(function () {
     Route::get('/', 'index')->name('providers.index');
     Route::get('/{id}', 'show')->name('providers.show');
     Route::post('/', 'store')->name('providers.store');
@@ -43,7 +44,7 @@ Route::middleware(['auth'])->prefix('providers')->controller(ProviderController:
     Route::delete('/{id}', 'destroy')->name('providers.destroy');
 });
 
-Route::middleware(['auth'])->prefix('products')->controller(ProductController::class)->group(function () {
+Route::middleware(['auth'])->prefix('/products')->controller(ProductController::class)->group(function () {
     Route::get('/', 'index')->name('products.index');
     Route::get('/{id}', 'show')->name('products.show');
     Route::post('/', 'store')->name('products.store');
@@ -51,10 +52,18 @@ Route::middleware(['auth'])->prefix('products')->controller(ProductController::c
     Route::delete('/{id}', 'destroy')->name('products.destroy');
 });
 
-Route::middleware(['auth'])->prefix('purchases')->controller(PurchaseController::class)->group(function () {
+Route::middleware(['auth'])->prefix('/purchases')->controller(PurchaseController::class)->group(function () {
     Route::get('/', 'index')->name('purchases.index');
     Route::get('/{id}', 'show')->name('purchases.show');
     Route::post('/', 'store')->name('purchases.store');
     Route::put('/{id}', 'update')->name('purchases.update');
     Route::delete('/{id}', 'destroy')->name('purchases.destroy');
+});
+
+Route::middleware(['auth'])->prefix('/sales')->controller(SaleController::class)->group(function () {
+    Route::get('/', 'index')->name('sales.index');
+    Route::get('/{id}', 'show')->name('sales.show');
+    Route::post('/', 'store')->name('sales.store');
+    Route::put('/{id}', 'update')->name('sales.update');
+    Route::delete('/{id}', 'destroy')->name('sales.destroy');
 });
