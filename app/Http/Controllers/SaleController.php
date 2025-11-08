@@ -79,6 +79,14 @@ class SaleController extends Controller
                     $product->update([
                         'stock' => $product->stock - $boxesToReduce,
                         'retail_remaining_stock' => $newRetailRemainingStock,
+                        /* Price modification data */
+                        'sold_by_retail' => $newPriceModification->sold_by_retail,
+                        'retail_units_per_box' => $newPriceModification->retail_units_per_box,
+                        'cost_price' => $newPriceModification->cost_price,
+                        'first_wholesale_percentage' => $newPriceModification->first_wholesale_percentage,
+                        'second_wholesale_percentage' => $newPriceModification->second_wholesale_percentage,
+                        'third_wholesale_percentage' => $newPriceModification->third_wholesale_percentage,
+                        'retail_percentage' => $newPriceModification->retail_percentage,
                     ]);
                 } else {
                     if ($item['quantity'] > $priceModification->retail_remaining_stock) {
@@ -125,16 +133,29 @@ class SaleController extends Controller
                         'retail_remaining_stock' => $auxRetailStock != null ? $newPriceModification->retail_remaining_stock + $auxRetailStock : $newPriceModification->retail_remaining_stock,
                         'is_current' => true,
                     ]);
+
+                    /* Product stock */
+                    $product->update([
+                        'stock' => $product->stock - $item['quantity'],
+                        /* Price modification data */
+                        'sold_by_retail' => $newPriceModification->sold_by_retail,
+                        'retail_units_per_box' => $newPriceModification->retail_units_per_box,
+                        'cost_price' => $newPriceModification->cost_price,
+                        'first_wholesale_percentage' => $newPriceModification->first_wholesale_percentage,
+                        'second_wholesale_percentage' => $newPriceModification->second_wholesale_percentage,
+                        'third_wholesale_percentage' => $newPriceModification->third_wholesale_percentage,
+                        'retail_percentage' => $newPriceModification->retail_percentage,
+                    ]);
                 } else {
                     $priceModification->update([
                         'remaining_stock' => $priceModification->remaining_stock - $item['quantity'],
                     ]);
-                }
 
-                /* Product stock */
-                $product->update([
-                    'stock' => $product->stock - $item['quantity'],
-                ]);
+                    /* Product stock */
+                    $product->update([
+                        'stock' => $product->stock - $item['quantity'],
+                    ]);
+                }
             }
         }
 
