@@ -41,11 +41,11 @@ class AuthenticatedSessionController extends Controller
             return to_route('two-factor.login');
         }
 
-        Auth::login($user, $request->boolean('remember'));
+        Auth::login($user, true);
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        return redirect()->intended(route('sales.index', absolute: false));
     }
 
     /**

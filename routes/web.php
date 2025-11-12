@@ -10,6 +10,7 @@ use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\SaleController;
 
 Route::get('/', function () {
+    return redirect()->route('sales.index');
     return Inertia::render('Welcome');
 })->name('home');
 
