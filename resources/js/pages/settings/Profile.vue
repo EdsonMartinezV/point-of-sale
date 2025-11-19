@@ -23,7 +23,7 @@ defineProps<Props>();
 
 const breadcrumbItems: BreadcrumbItem[] = [
     {
-        title: 'Profile settings',
+        title: 'Ajustes del perfil',
         href: edit().url,
     },
 ];
@@ -39,8 +39,8 @@ const user = page.props.auth.user;
         <SettingsLayout>
             <div class="flex flex-col space-y-6">
                 <HeadingSmall
-                    title="Profile information"
-                    description="Update your name and email address"
+                    title="Información del perfil"
+                    description="Actualza nombre de usuario y correo electrónico de tu cuenta"
                 />
 
                 <Form
@@ -49,21 +49,21 @@ const user = page.props.auth.user;
                     v-slot="{ errors, processing, recentlySuccessful }"
                 >
                     <div class="grid gap-2">
-                        <Label for="name">Name</Label>
+                        <Label for="name">Nombre</Label>
                         <Input
-                            id="name"
+                            id="nickname"
                             class="mt-1 block w-full"
-                            name="name"
-                            :default-value="user.name"
+                            name="nickname"
+                            :default-value="user.nickname"
                             required
-                            autocomplete="name"
-                            placeholder="Full name"
+                            autocomplete="nickname"
+                            placeholder="Nombre"
                         />
-                        <InputError class="mt-2" :message="errors.name" />
+                        <InputError class="mt-2" :message="errors.nickname" />
                     </div>
 
                     <div class="grid gap-2">
-                        <Label for="email">Email address</Label>
+                        <Label for="email">Email</Label>
                         <Input
                             id="email"
                             type="email"
@@ -71,8 +71,8 @@ const user = page.props.auth.user;
                             name="email"
                             :default-value="user.email"
                             required
-                            autocomplete="username"
-                            placeholder="Email address"
+                            autocomplete="email"
+                            placeholder="Email"
                         />
                         <InputError class="mt-2" :message="errors.email" />
                     </div>
@@ -102,7 +102,7 @@ const user = page.props.auth.user;
                         <Button
                             :disabled="processing"
                             data-test="update-profile-button"
-                            >Save</Button
+                            >Guardar</Button
                         >
 
                         <Transition
@@ -115,14 +115,14 @@ const user = page.props.auth.user;
                                 v-show="recentlySuccessful"
                                 class="text-sm text-neutral-600"
                             >
-                                Saved.
+                                Listo.
                             </p>
                         </Transition>
                     </div>
                 </Form>
             </div>
 
-            <DeleteUser />
+            <!-- <DeleteUser /> -->
         </SettingsLayout>
     </AppLayout>
 </template>
