@@ -14,14 +14,22 @@ import {
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-vue-next';
+import { BookOpen, Folder, LayoutGrid, BaggageClaim, ShoppingBasket } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
+
+import PurchaseController from '@/actions/App/Http/Controllers/PurchaseController';
+import SaleController from '@/actions/App/Http/Controllers/SaleController';
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
+        title: 'Compras',
+        href: PurchaseController.index(),
+        icon: BaggageClaim,
+    },
+    {
+        title: 'Ventas',
+        href: SaleController.index(),
+        icon: ShoppingBasket,
     },
 ];
 
@@ -45,7 +53,7 @@ const footerNavItems: NavItem[] = [
             <SidebarMenu>
                 <SidebarMenuItem>
                     <SidebarMenuButton size="lg" as-child>
-                        <Link :href="dashboard()">
+                        <Link :href="SaleController.index()">
                             <AppLogo />
                         </Link>
                     </SidebarMenuButton>

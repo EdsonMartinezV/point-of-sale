@@ -37,6 +37,9 @@ import { InertiaLinkProps, Link, usePage } from '@inertiajs/vue3';
 import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-vue-next';
 import { computed } from 'vue';
 
+import PurchaseController from '@/actions/App/Http/Controllers/PurchaseController';
+import SaleController from '@/actions/App/Http/Controllers/SaleController';
+
 interface Props {
     breadcrumbs?: BreadcrumbItem[];
 }
@@ -62,8 +65,13 @@ const activeItemStyles = computed(
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'Dashboard',
-        href: dashboard(),
+        title: 'Compras',
+        href: PurchaseController.index(),
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Ventas',
+        href: SaleController.index(),
         icon: LayoutGrid,
     },
 ];
@@ -100,7 +108,7 @@ const rightNavItems: NavItem[] = [
                         </SheetTrigger>
                         <SheetContent side="left" class="w-[300px] p-6">
                             <SheetTitle class="sr-only"
-                                >Navigation Menu</SheetTitle
+                                >Menú de navegación</SheetTitle
                             >
                             <SheetHeader class="flex justify-start text-left">
                                 <AppLogoIcon
@@ -148,7 +156,7 @@ const rightNavItems: NavItem[] = [
                     </Sheet>
                 </div>
 
-                <Link :href="dashboard()" class="flex items-center gap-x-2">
+                <Link :href="SaleController.index()" class="flex items-center gap-x-2">
                     <AppLogo />
                 </Link>
 
@@ -250,12 +258,12 @@ const rightNavItems: NavItem[] = [
                                     <AvatarImage
                                         v-if="auth.user.avatar"
                                         :src="auth.user.avatar"
-                                        :alt="auth.user.name"
+                                        :alt="auth.user.nickname"
                                     />
                                     <AvatarFallback
                                         class="rounded-lg bg-neutral-200 font-semibold text-black dark:bg-neutral-700 dark:text-white"
                                     >
-                                        {{ getInitials(auth.user?.name) }}
+                                        {{ getInitials(auth.user?.nickname) }}
                                     </AvatarFallback>
                                 </Avatar>
                             </Button>
