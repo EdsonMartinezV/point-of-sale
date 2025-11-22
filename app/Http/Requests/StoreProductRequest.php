@@ -13,7 +13,7 @@ class StoreProductRequest extends FormRequest
 
     public function rules() {
         return [
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', 'unique:products'],
             'sold_by_retail' => ['required', 'boolean'],
             'category_id' => ['required', 'exists:categories,id'],
             'measure_unit_id' => ['required', 'exists:measure_units,id'],
