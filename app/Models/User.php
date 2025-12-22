@@ -62,7 +62,7 @@ class User extends Authenticatable
     protected function isAdmin(): Attribute{
         return new Attribute(
             get: fn () => $this->roles->filter(function ($role) {
-                return $role->description === Roles::ADMIN->value;
+                return $role->name === Roles::ADMIN->value;
             })->count() === 1
         );
     }
@@ -70,7 +70,7 @@ class User extends Authenticatable
     protected function isOwner(): Attribute{
         return new Attribute(
             get: fn () => $this->roles->filter(function ($role) {
-                return $role->description === Roles::OWNER->value;
+                return $role->name === Roles::OWNER->value;
             })->count() === 1
         );
     }
@@ -78,7 +78,7 @@ class User extends Authenticatable
     protected function isCashier(): Attribute{
         return new Attribute(
             get: fn () => $this->roles->filter(function ($role) {
-                return $role->description === Roles::CASHIER->value;
+                return $role->name === Roles::CASHIER->value;
             })->count() === 1
         );
     }
