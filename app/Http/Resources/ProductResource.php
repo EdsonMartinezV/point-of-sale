@@ -26,7 +26,7 @@ class ProductResource extends JsonResource
             'category' => new CategoryResource($this->whenLoaded('category')),
             'measure_unit' => new MeasureUnitResource($this->whenLoaded('measureUnit')),
             'retail_measure_unit' => new MeasureUnitResource($this->whenLoaded('retailMeasureUnit')),
-            'current_price_modification' => $this->current_price_modification->id,
+            'current_price_modification' => $this->current_price_modification->id ?? null,
         ];
     }
 }
