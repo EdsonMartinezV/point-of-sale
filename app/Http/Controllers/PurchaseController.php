@@ -8,7 +8,9 @@ use App\Models\PurchaseItem;
 use App\Models\PriceModification;
 use App\Http\Requests\StorePurchaseRequest;
 use App\Http\Requests\UpdatePurchaseRequest;
+use App\Http\Resources\ProviderResource;
 use App\Models\Product;
+use App\Models\Provider;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 
@@ -17,7 +19,8 @@ class PurchaseController extends Controller
     public function index() {
         $purchases = Purchase::with('items')->get();
         return Inertia::render('Purchases/Index', [
-            'purchases' => $purchases
+            'purchases' => $purchases,
+            'providers' => ProviderResource::collection(Provider::all()),
         ]);
     }
 

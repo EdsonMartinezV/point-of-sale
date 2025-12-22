@@ -42,11 +42,11 @@ class ProductController extends Controller
     }
 
     public function search(Request $request) {
-        $q = trim((string) $request->query('q', ''));
+        $q = trim((string) $request->query('q'));
 
         $query = Product::query();
         if ($q !== '') {
-            $query->where('name', 'like', "%$q%");
+            $query = Product::where('name', 'like', "%$q%");
         }
 
         $products = $query->limit(50)->get();
