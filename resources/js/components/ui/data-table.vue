@@ -1,10 +1,18 @@
 <script setup lang="ts" generic="TData, TValue">
-import type { ColumnDef } from '@tanstack/vue-table'
+import type {
+  ColumnDef,
+  ColumnFiltersState,
+  SortingState,
+} from '@tanstack/vue-table'
 import {
   FlexRender,
   getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
   useVueTable,
 } from '@tanstack/vue-table'
+import { valueUpdater } from '@/lib/utils';
 
 import {
   Table,
@@ -14,21 +22,42 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { provide } from 'vue';
+import { ref } from 'vue';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 const props = defineProps<{
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
-}>()
+}>();
+
+const sorting = ref<SortingState>([]);
+const columnFilters = ref<ColumnFiltersState>([]);
 
 const table = useVueTable({
   get data() { return props.data },
   get columns() { return props.columns },
   getCoreRowModel: getCoreRowModel(),
+  getPaginationRowModel: getPaginationRowModel(),
+  getSortedRowModel: getSortedRowModel(),
+  onSortingChange: updaterOrValue => valueUpdater(updaterOrValue, sorting),
+  onColumnFiltersChange: updaterOrValue => valueUpdater(updaterOrValue, columnFilters),
+  getFilteredRowModel: getFilteredRowModel(),
+  state: {
+    get sorting() { return sorting.value },
+    get columnFilters() { return columnFilters.value },
+  },
 })
 </script>
 
 <template>
+  <div class="flex items-center py-4">
+    <div class="flex items-center py-4">
+      <Input class="max-w-sm" placeholder="Buscar por nombre"
+        :model-value="table.getColumn('name')?.getFilterValue() as string"
+        @update:model-value=" table.getColumn('name')?.setFilterValue($event)" />
+    </div>
+  </div>
   <div class="border rounded-md">
     <Table>
       <TableHeader>
@@ -61,5 +90,23 @@ const table = useVueTable({
         </template>
       </TableBody>
     </Table>
+    <div class="flex items-center justify-end py-4 space-x-2">
+      <Button
+        variant="outline"
+        size="sm"
+        :disabled="!table.getCanPreviousPage()"
+        @click="table.previousPage()"
+      >
+        Anterior
+      </Button>
+      <Button
+        variant="outline"
+        size="sm"
+        :disabled="!table.getCanNextPage()"
+        @click="table.nextPage()"
+      >
+        Siguiente
+      </Button>
+    </div>
   </div>
 </template>

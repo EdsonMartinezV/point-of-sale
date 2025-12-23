@@ -137,7 +137,7 @@ providersStore.$subscribe((mutation, state) => {
             <!-- List box -->
             <div class="relative min-h-[100vh] flex-1 rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border p-4">
                 <h2 class="font-medium text-lg">Proveedores</h2>
-                <DataTable :columns="columns" :data="props.providers" class="mt-4"/>
+                <DataTable :columns="columns" :data="props.providers"/>
             </div>
         </div>
     </AppLayout>

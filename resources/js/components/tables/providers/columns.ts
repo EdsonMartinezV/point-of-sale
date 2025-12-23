@@ -1,12 +1,19 @@
 import { Provider } from '@/types/main'
 import { ColumnDef } from '@tanstack/vue-table'
 import DropdownAction from '@/components/tables/providers/data-table-dropdown.vue'
+import { ArrowUpDown } from 'lucide-vue-next'
+import Button from '@/components/ui/button/Button.vue'
 import { h } from 'vue'
 
 export const columns: ColumnDef<Provider>[] = [
   {
     accessorKey: 'name',
-    header: () => h('div', { class: 'text-left font-bold text-base' }, 'Nombre'),
+    header: ({ column }) => {
+      return h(Button, {
+        variant: 'ghost',
+        onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+      }, () => ['Nombre', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })])
+    },
     cell: ({ row }) => {
         /* You can format here */
         return h('div', { class: 'text-left font-medium' }, row.getValue('name'))
@@ -14,28 +21,48 @@ export const columns: ColumnDef<Provider>[] = [
   },
   {
     accessorKey: 'email',
-    header: () => h('div', { class: 'text-left font-bold text-base' }, 'Correo Electrónico'),
+    header: ({ column }) => {
+      return h(Button, {
+        variant: 'ghost',
+        onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+      }, () => ['Correo Electrónico', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })])
+    },
     cell: ({ row }) => {
         return h('div', { class: 'text-left' }, row.getValue('email') || '—')
     },
   },
   {
     accessorKey: 'phone',
-    header: () => h('div', { class: 'text-left font-bold text-base' }, 'Teléfono'),
+    header: ({ column }) => {
+      return h(Button, {
+        variant: 'ghost',
+        onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+      }, () => ['Teléfono', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })])
+    },
     cell: ({ row }) => {
         return h('div', { class: 'text-left' }, row.getValue('phone') || '—')
     },
   },
   {
     accessorKey: 'address',
-    header: () => h('div', { class: 'text-left font-bold text-base' }, 'Dirección'),
+    header: ({ column }) => {
+      return h(Button, {
+        variant: 'ghost',
+        onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+      }, () => ['Dirección', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })])
+    },
     cell: ({ row }) => {
         return h('div', { class: 'text-left' }, row.getValue('address') || '—')
     },
   },
   {
     accessorKey: 'contact_person',
-    header: () => h('div', { class: 'text-left font-bold text-base' }, 'Persona de Contacto'),
+    header: ({ column }) => {
+      return h(Button, {
+        variant: 'ghost',
+        onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+      }, () => ['Persona de Contacto', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })])
+    },
     cell: ({ row }) => {
         return h('div', { class: 'text-left' }, row.getValue('contact_person') || '—')
     },
@@ -49,16 +76,6 @@ export const columns: ColumnDef<Provider>[] = [
         return h('div', { class: 'text-center' }, h(DropdownAction,  {
             providerId: provider.id
         }))
-        /* return h('div', { class: 'flex items-center justify-center gap-2' }, [
-            h('button', {
-                class: 'text-xs bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded',
-                onClick: () => console.log('Edit provider', provider.id)
-            }, 'Editar'),
-            h('button', {
-                class: 'text-xs bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded',
-                onClick: () => console.log('Delete provider', provider.id)
-            }, 'Eliminar')
-        ]) */
     },
   }
 ]
