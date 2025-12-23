@@ -6,12 +6,22 @@ import { ref } from 'vue';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { LoaderCircle } from 'lucide-vue-next';
-import InputError from '@/components/InputError.vue';
-import ProviderController from '@/actions/App/Http/Controllers/ProviderController';
-import type { Provider } from '@/types/main';
-import { columns } from '@/components/tables/providers/columns';
 import DataTable from '@/components/ui/data-table.vue';
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
+import InputError from '@/components/InputError.vue';
+import { LoaderCircle } from 'lucide-vue-next';
+
+import type { Provider } from '@/types/main';
+import ProviderController from '@/actions/App/Http/Controllers/ProviderController';
+import { columns } from '@/components/tables/providers/columns';
 import { useProvidersStore } from '@/stores/providers';
 
 const props = defineProps<{
@@ -19,6 +29,7 @@ const props = defineProps<{
 }>();
 
 const providerToEdit = ref<Provider | null>(null);
+const showDestroyAlert = ref<boolean>(false);
 
 const providersStore = useProvidersStore();
 providersStore.$subscribe((mutation, state) => {
@@ -29,6 +40,12 @@ providersStore.$subscribe((mutation, state) => {
     } else {
         providerToEdit.value = null;
         console.log('NULL!');
+    }
+
+    if (state.idToDelete !== 0) {
+        showDestroyAlert.value = true;
+    } else {
+        showDestroyAlert.value = false;
     }
 });
 </script>
@@ -139,6 +156,34 @@ providersStore.$subscribe((mutation, state) => {
                 <h2 class="font-medium text-lg">Proveedores</h2>
                 <DataTable :columns="columns" :data="props.providers"/>
             </div>
+
+            <!-- Dialog alert -->
+            <AlertDialog v-model:open="showDestroyAlert">
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>¿Estás seguro de eliminar este proveedor?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Esta acción no se puede deshacer. Esto eliminará permanentemente el proveedor seleccionado.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel @click="providersStore.clearIdToDelete()">Cancelar</AlertDialogCancel>
+                        <Form
+                            v-bind="ProviderController.destroy.form({ id: providersStore.idToDelete })"
+                            id="destroyForm"
+                            :reset-on-success="true"
+                            :onFinish="() => providersStore.clearIdToDelete()"
+                        ></Form>
+                            <Button
+                                type="submit"
+                                form="destroyForm"
+                                class="bg-red-600 hover:bg-red-700 focus:ring-red-500"
+                            >
+                                Eliminar
+                            </Button>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     </AppLayout>
 </template>
