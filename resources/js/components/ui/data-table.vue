@@ -1,15 +1,14 @@
 <script setup lang="ts" generic="TData, TValue">
 import type {
   ColumnDef,
-  ColumnFiltersState,
   SortingState,
 } from '@tanstack/vue-table'
 import {
   FlexRender,
   getCoreRowModel,
-  getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  getFilteredRowModel,
   useVueTable,
 } from '@tanstack/vue-table'
 import { valueUpdater } from '@/lib/utils';
@@ -32,7 +31,7 @@ const props = defineProps<{
 }>();
 
 const sorting = ref<SortingState>([]);
-const columnFilters = ref<ColumnFiltersState>([]);
+const globalFilter = ref<any>([]);
 
 const table = useVueTable({
   get data() { return props.data },
@@ -40,12 +39,13 @@ const table = useVueTable({
   getCoreRowModel: getCoreRowModel(),
   getPaginationRowModel: getPaginationRowModel(),
   getSortedRowModel: getSortedRowModel(),
-  onSortingChange: updaterOrValue => valueUpdater(updaterOrValue, sorting),
-  onColumnFiltersChange: updaterOrValue => valueUpdater(updaterOrValue, columnFilters),
   getFilteredRowModel: getFilteredRowModel(),
+  getColumnCanGlobalFilter: () => true,
+  onSortingChange: updaterOrValue => valueUpdater(updaterOrValue, sorting),
+  onGlobalFilterChange: updaterOrValue => valueUpdater(updaterOrValue, globalFilter),
   state: {
     get sorting() { return sorting.value },
-    get columnFilters() { return columnFilters.value },
+    get globalFilter() { return globalFilter.value }
   },
 })
 </script>
@@ -53,9 +53,9 @@ const table = useVueTable({
 <template>
   <div class="flex items-center py-4">
     <div class="flex items-center py-4">
-      <Input class="max-w-sm" placeholder="Buscar por nombre"
-        :model-value="table.getColumn('name')?.getFilterValue() as string"
-        @update:model-value=" table.getColumn('name')?.setFilterValue($event)" />
+      <Input class="max-w-sm" placeholder="Buscar"
+        :modelValue="globalFilter ?? ''"
+        @update:modelValue="(value) => (globalFilter = String(value))" />
     </div>
   </div>
   <div class="border rounded-md">
