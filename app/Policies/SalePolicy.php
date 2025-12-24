@@ -9,22 +9,22 @@ use Illuminate\Auth\Access\Response;
 class SalePolicy
 {
     public function before(User $user, string $ability): bool|null{
-        if ($user->isAdmin() || $user->isOwner()) {
+        if ($user->is_admin || $user->is_owner) {
             return true;
         }
         return null;
     }
 
     public function viewAny(User $user): bool{
-        return $user->isCashier();
+        return $user->is_cashier;
     }
 
     public function view(User $user, Sale $sale): bool{
-        return $user->isCashier();
+        return $user->is_cashier;
     }
 
     public function create(User $user): bool{
-        return $user->isCashier();
+        return $user->is_cashier;
     }
 
     public function update(User $user, Sale $sale): bool{

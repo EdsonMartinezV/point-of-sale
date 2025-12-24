@@ -9,7 +9,7 @@ use Illuminate\Auth\Access\Response;
 class PurchasePolicy
 {
     public function before(User $user, $ability): bool|null{
-        if ($user->isAdmin() || $user->isOwner()) {
+        if ($user->is_admin || $user->is_owner) {
             return true;
         }
 
@@ -17,11 +17,11 @@ class PurchasePolicy
     }
 
     public function viewAny(User $user): bool{
-        return $user->isCashier();
+        return $user->is_cashier;
     }
 
     public function view(User $user, Purchase $purchase): bool{
-        return $user->isCashier();
+        return $user->is_cashier;
     }
 
     public function create(User $user): bool{

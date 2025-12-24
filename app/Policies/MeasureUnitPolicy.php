@@ -9,37 +9,37 @@ use Illuminate\Auth\Access\Response;
 class MeasureUnitPolicy
 {
     public function before(User $user, string $ability): bool|null {
-        if ($user->isAdmin() || $user->isOwner()) {
+        if ($user->is_admin || $user->is_owner) {
             return true;
         }
         return null;
     }
 
     public function viewAny(User $user): bool {
-        return $user->isCashier();
+        return $user->is_cashier;
     }
 
     public function view(User $user, MeasureUnit $measureUnit): bool {
-        return $user->isCashier();
+        return $user->is_cashier;
     }
 
     public function create(User $user): bool {
-        return $user->isCashier();
+        return $user->is_cashier;
     }
 
     public function update(User $user, MeasureUnit $measureUnit): bool {
-        return $user->isCashier();
+        return $user->is_cashier;
     }
 
     public function delete(User $user, MeasureUnit $measureUnit): bool {
-        return $user->isCashier();
+        return $user->is_cashier;
     }
 
     public function restore(User $user, MeasureUnit $measureUnit): bool {
-        return $user->isCashier();
+        return $user->is_cashier;
     }
 
     public function forceDelete(User $user, MeasureUnit $measureUnit): bool {
-        return $user->isCashier();
+        return $user->is_cashier;
     }
 }
