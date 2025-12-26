@@ -84,13 +84,13 @@ const table = useVueTable({
         <template v-else>
           <TableRow>
             <TableCell :colspan="columns.length" class="h-24 text-center">
-              No results.
+              Sin registros
             </TableCell>
           </TableRow>
         </template>
       </TableBody>
     </Table>
-    <div class="flex items-center justify-end py-4 space-x-2">
+    <div class="flex items-center justify-end py-4 pe-4 space-x-2">
       <Button
         variant="outline"
         size="sm"

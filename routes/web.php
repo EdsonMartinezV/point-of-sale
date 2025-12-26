@@ -23,7 +23,7 @@ require __DIR__.'/auth.php';
 
 Route::middleware(['auth'])->prefix('/categories')->controller(CategoryController::class)->group(function () {
     Route::get('/', 'index')->name('categories.index');
-    Route::get('/{id}', 'show')->name('categories.show');
+    /* Route::get('/{id}', 'show')->name('categories.show'); */
     Route::post('/', 'store')->name('categories.store');
     Route::put('/{id}', 'update')->name('categories.update');
     Route::delete('/{id}', 'destroy')->name('categories.destroy');

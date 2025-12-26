@@ -34,12 +34,10 @@ const showDestroyAlert = ref<boolean>(false);
 const providersStore = useProvidersStore();
 providersStore.$subscribe((mutation, state) => {
     if (state.idToEdit !== null) {
-        /* providerToEdit.value = null; */
         const provider = props.providers.find(p => p.id === state.idToEdit) || null;
         providerToEdit.value = provider;
     } else {
         providerToEdit.value = null;
-        console.log('NULL!');
     }
 
     if (state.idToDelete !== 0) {
@@ -65,7 +63,7 @@ providersStore.$subscribe((mutation, state) => {
                     v-slot="{ errors, processing }"
                     class="flex flex-col gap-4 w-full mt-4"
                 >
-                    <div class="flex gap-4 w-full">
+                    <div class="flex gap-4 w-full items-start">
                         <div class="grid gap-2 w-full">
                             <Label for="name">Nombre<span class="text-red-500">*</span></Label>
                             <Input
@@ -163,24 +161,20 @@ providersStore.$subscribe((mutation, state) => {
                     <AlertDialogHeader>
                         <AlertDialogTitle>¿Estás seguro de eliminar este proveedor?</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Esta acción no se puede deshacer. Esto eliminará permanentemente el proveedor seleccionado.
+                            Esta acción no se puede deshacer<br>Esto eliminará permanentemente el proveedor seleccionado
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                         <AlertDialogCancel @click="providersStore.clearIdToDelete()">Cancelar</AlertDialogCancel>
                         <Form
                             v-bind="ProviderController.destroy.form({ id: providersStore.idToDelete })"
-                            id="destroyForm"
                             :reset-on-success="true"
                             :onFinish="() => providersStore.clearIdToDelete()"
-                        ></Form>
-                            <Button
-                                type="submit"
-                                form="destroyForm"
-                                class="bg-red-600 hover:bg-red-700 focus:ring-red-500"
-                            >
+                        >
+                            <Button type="submit" class="bg-red-600 hover:bg-red-700 focus:ring-red-500">
                                 Eliminar
                             </Button>
+                        </Form>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
