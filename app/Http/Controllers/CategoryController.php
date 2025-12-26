@@ -10,36 +10,43 @@ use Inertia\Inertia;
 
 class CategoryController extends Controller
 {
-    public function index() {
+    public function index(Request $request) {
         $categories = Category::all();
         return Inertia::render('Categories/Index', [
-            'categories' => $categories
+            'categories' => $categories,
+            /* From redirecting */
+            /* 'success' => array_key_exists('success', $request->query()) ? $request->query('success') : '',
+            'error' => array_key_exists('error', $request->query()) ? $request->query('error') : '', */
         ]);
     }
 
-    public function show($id) {
+    /* public function show($id) {
         $category = Category::findOrFail($id);
         return Inertia::render('Categories/Show', [
             'category' => $category
         ]);
-    }
+    } */
 
     public function store(StoreCategoryRequest $request) {
         $validated = $request->validated();
         Category::create($validated);
-        return redirect()->route('categories.index')->with('success', 'Categoria creada con éxito.');
+        return redirect()->route('categories.index')->with('success', 'Categoria creada con éxito');
     }
 
     public function update(UpdateCategoryRequest $request, $id) {
         $category = Category::findOrFail($id);
         $validated = $request->validated();
         $category->update($validated);
-        return redirect()->route('categories.index')->with('success', 'Categoria actualizada con éxito.');
+        return to_route('categories.index')->with('success', 'Categoria actualizada con éxito');
     }
 
-    public function destroy($id) {
+    public function destroy(Request $request, $id) {
         $category = Category::findOrFail($id);
+        $relatedProductsCount = $category->products()->count();
+        if ($relatedProductsCount > 0) {
+            return to_route('categories.index')->with('error', 'No se puede eliminar la categoría porque tiene productos relacionados');
+        }
         $category->delete();
-        return redirect()->route('categories.index')->with('success', 'Categoria eliminada con éxito.');
+        return to_route('categories.index')->with('success', 'Categoria eliminada con éxito');
     }
 }
