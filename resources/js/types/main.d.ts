@@ -18,16 +18,16 @@ export interface Product {
     name: string;
     sold_by_retail: boolean;
     retail_units_per_box?: number;
-    stock: number;
+    stock?: number;
     retail_remaining_stock?: number;
     cost_price?: number;
-    first_wholesale_percentage: number;
-    second_wholesale_percentage: number;
-    third_wholesale_percentage: number;
+    first_wholesale_percentage?: number;
+    second_wholesale_percentage?: number;
+    third_wholesale_percentage?: number;
     retail_percentage?: number;
-    category_id: number;
-    measure_unit_id: number;
-    retail_measure_unit_id: number;
+    category_id?: number;
+    measure_unit_id?: number;
+    retail_measure_unit_id?: number;
 }
 
 export interface MeasureUnit {
