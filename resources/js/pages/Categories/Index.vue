@@ -109,7 +109,7 @@ categoriesStore.$subscribe((mutation, state) => {
                     <Button
                         type="submit"
                         class="w-full"
-                        :tabindex="5"
+                        :tabindex="3"
                         :disabled="processing"
                         data-test="register-user-button"
                     >

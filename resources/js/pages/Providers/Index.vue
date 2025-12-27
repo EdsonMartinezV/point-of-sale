@@ -148,7 +148,7 @@ providersStore.$subscribe((mutation, state) => {
                     <Button
                         type="submit"
                         class="w-full"
-                        :tabindex="5"
+                        :tabindex="6"
                         :disabled="processing"
                         data-test="register-user-button"
                     >
