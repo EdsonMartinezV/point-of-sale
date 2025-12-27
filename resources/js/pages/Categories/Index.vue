@@ -71,7 +71,7 @@ categoriesStore.$subscribe((mutation, state) => {
                 <Form
                     v-bind="categoriesStore.idToEdit === null ? CategoryController.store.form() : CategoryController.update.form(categoriesStore.idToEdit)"
                     :reset-on-success="true"
-                    :onFinish="handleMainFormFinish"
+                    :onSuccess="handleMainFormFinish"
                     v-slot="{ errors, processing }"
                     class="flex flex-col gap-4 w-full mt-4"
                 >

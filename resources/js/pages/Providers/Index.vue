@@ -71,7 +71,7 @@ providersStore.$subscribe((mutation, state) => {
                 <Form
                     v-bind="providersStore.idToEdit === null ? ProviderController.store.form() : ProviderController.update.form(providersStore.idToEdit)"
                     :reset-on-success="true"
-                    :onFinish="handleMainFormFinish"
+                    :onSuccess="handleMainFormFinish"
                     v-slot="{ errors, processing }"
                     class="flex flex-col gap-4 w-full mt-4"
                 >
