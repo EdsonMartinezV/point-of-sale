@@ -29,6 +29,7 @@ const props = defineProps<{
   providers: Provider[];
 }>();
 
+const providersStore = useProvidersStore();
 const providerToEdit = ref<Provider | null>(null);
 const showDestroyAlert = ref<boolean>(false);
 const showMessageAlert = ref<boolean>(false);
@@ -43,7 +44,6 @@ const handleDestroyFormFinish = () => {
     showMessageAlert.value = true;
 };
 
-const providersStore = useProvidersStore();
 providersStore.$subscribe((mutation, state) => {
     if (state.idToEdit !== null) {
         const provider = props.providers.find(p => p.id === state.idToEdit) || null;

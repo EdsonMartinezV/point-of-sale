@@ -29,6 +29,7 @@ const props = defineProps<{
   categories: Category[];
 }>();
 
+const categoriesStore = useCategoriesStore();
 const categoryToEdit = ref<Category | null>(null);
 const showDestroyAlert = ref<boolean>(false);
 const showMessageAlert = ref<boolean>(false);
@@ -43,7 +44,6 @@ const handleDestroyFormFinish = () => {
     showMessageAlert.value = true;
 };
 
-const categoriesStore = useCategoriesStore();
 categoriesStore.$subscribe((mutation, state) => {
     if (state.idToEdit !== null) {
         const category = props.categories.find(c => c.id === state.idToEdit) || null;
