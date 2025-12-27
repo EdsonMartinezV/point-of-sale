@@ -31,7 +31,7 @@ Route::middleware(['auth'])->prefix('/categories')->controller(CategoryControlle
 
 Route::middleware(['auth'])->prefix('/measure-units')->controller(MeasureUnitController::class)->group(function () {
     Route::get('/', 'index')->name('measure-units.index');
-    Route::get('/{id}', 'show')->name('measure-units.show');
+    /* Route::get('/{id}', 'show')->name('measure-units.show'); */
     Route::post('/', 'store')->name('measure-units.store');
     Route::put('/{id}', 'update')->name('measure-units.update');
     Route::delete('/{id}', 'destroy')->name('measure-units.destroy');
@@ -39,7 +39,7 @@ Route::middleware(['auth'])->prefix('/measure-units')->controller(MeasureUnitCon
 
 Route::middleware(['auth'])->prefix('/providers')->controller(ProviderController::class)->group(function () {
     Route::get('/', 'index')->name('providers.index');
-    Route::get('/{id}', 'show')->name('providers.show');
+    /* Route::get('/{id}', 'show')->name('providers.show'); */
     Route::post('/', 'store')->name('providers.store');
     Route::put('/{id}', 'update')->name('providers.update');
     Route::delete('/{id}', 'destroy')->name('providers.destroy');

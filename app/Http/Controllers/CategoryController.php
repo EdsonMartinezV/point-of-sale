@@ -14,9 +14,6 @@ class CategoryController extends Controller
         $categories = Category::all();
         return Inertia::render('Categories/Index', [
             'categories' => $categories,
-            /* From redirecting */
-            /* 'success' => array_key_exists('success', $request->query()) ? $request->query('success') : '',
-            'error' => array_key_exists('error', $request->query()) ? $request->query('error') : '', */
         ]);
     }
 

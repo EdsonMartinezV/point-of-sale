@@ -13,16 +13,16 @@ class ProviderController extends Controller
     public function index() {
         $providers = Provider::all();
         return Inertia::render('Providers/Index', [
-            'providers' => $providers
+            'providers' => $providers,
         ]);
     }
 
-    public function show($id) {
+    /* public function show($id) {
         $provider = Provider::findOrFail($id);
         return Inertia::render('Providers/Show', [
             'provider' => $provider
         ]);
-    }
+    } */
 
     public function store(StoreProviderRequest $request) {
         $validated = $request->validated();
@@ -39,6 +39,10 @@ class ProviderController extends Controller
 
     public function destroy($id) {
         $provider = Provider::findOrFail($id);
+        $relatedPurchasesCount = $provider->purchases()->count();
+        if ($relatedPurchasesCount > 0) {
+            return redirect()->route('providers.index')->with('error', 'No se puede eliminar el proveedor porque tiene compras relacionadas');
+        }
         $provider->delete();
         return redirect()->route('providers.index')->with('success', 'Proveedor eliminado exitosamente.');
     }

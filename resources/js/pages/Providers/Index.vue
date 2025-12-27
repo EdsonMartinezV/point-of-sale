@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import DataTable from '@/components/ui/data-table.vue';
 import {
   AlertDialog,
+  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -30,6 +31,17 @@ const props = defineProps<{
 
 const providerToEdit = ref<Provider | null>(null);
 const showDestroyAlert = ref<boolean>(false);
+const showMessageAlert = ref<boolean>(false);
+
+const handleMainFormFinish = () => {
+    providersStore.clearIdToEdit();
+    showMessageAlert.value = true;
+};
+
+const handleDestroyFormFinish = () => {
+    providersStore.clearIdToDelete();
+    showMessageAlert.value = true;
+};
 
 const providersStore = useProvidersStore();
 providersStore.$subscribe((mutation, state) => {
@@ -59,7 +71,7 @@ providersStore.$subscribe((mutation, state) => {
                 <Form
                     v-bind="providersStore.idToEdit === null ? ProviderController.store.form() : ProviderController.update.form(providersStore.idToEdit)"
                     :reset-on-success="true"
-                    :onFinish="() => providersStore.clearIdToEdit()"
+                    :onFinish="handleMainFormFinish"
                     v-slot="{ errors, processing }"
                     class="flex flex-col gap-4 w-full mt-4"
                 >
@@ -169,12 +181,27 @@ providersStore.$subscribe((mutation, state) => {
                         <Form
                             v-bind="ProviderController.destroy.form({ id: providersStore.idToDelete })"
                             :reset-on-success="true"
-                            :onFinish="() => providersStore.clearIdToDelete()"
+                            :onFinish="handleDestroyFormFinish"
                         >
                             <Button type="submit" class="bg-red-600 hover:bg-red-700 focus:ring-red-500">
                                 Eliminar
                             </Button>
                         </Form>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+
+            <!-- Message alert -->
+            <AlertDialog v-model:open="showMessageAlert">
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>{{ $page.props.flash.success ? 'Listo!' : 'Error' }}</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            {{ $page.props.flash.success || $page.props.flash.error }}
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogAction @click="providersStore.clearIdToDelete()">Aceptar</AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
