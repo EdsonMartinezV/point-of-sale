@@ -6,6 +6,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
+use App\Http\Resources\CategoryResource;
 use Inertia\Inertia;
 
 class CategoryController extends Controller
@@ -13,7 +14,7 @@ class CategoryController extends Controller
     public function index(Request $request) {
         $categories = Category::all();
         return Inertia::render('Categories/Index', [
-            'categories' => $categories,
+            'categories' => CategoryResource::collection($categories),
         ]);
     }
 
