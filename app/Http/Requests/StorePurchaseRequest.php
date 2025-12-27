@@ -30,4 +30,10 @@ class StorePurchaseRequest extends FormRequest
             /* PRODUCTS FIELDS ALONG PREVIOUS FIELDS */
         ];
     }
+
+    public function messages() {
+        return [
+            'purchase_items.*.retail_percentage.required_if' => '.El porcentaje de venta al menudeo es obligatorio cuando se vende al menudeo.',
+        ];
+    }
 }

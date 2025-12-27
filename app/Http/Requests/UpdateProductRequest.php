@@ -20,4 +20,10 @@ class UpdateProductRequest extends FormRequest
             'retail_measure_unit_id' => ['required_if:sold_by_retail,true', 'exists:measure_units,id'],
         ];
     }
+
+    public function messages() {
+        return [
+            'retail_measure_unit_id.required_if' => 'La unidad de medida al menudeo es obligatoria cuando el producto se vende al menudeo.',
+        ];
+    }
 }
