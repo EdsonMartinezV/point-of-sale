@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Provider;
 use App\Http\Requests\StoreProviderRequest;
 use App\Http\Requests\UpdateProviderRequest;
+use App\Http\Resources\ProviderResource;
 use Inertia\Inertia;
 
 class ProviderController extends Controller
@@ -13,7 +14,7 @@ class ProviderController extends Controller
     public function index() {
         $providers = Provider::all();
         return Inertia::render('Providers/Index', [
-            'providers' => $providers,
+            'providers' => ProviderResource::collection($providers),
         ]);
     }
 
