@@ -139,7 +139,7 @@ return [
     'required' => 'El campo es obligatorio.',
     'required_array_keys' => 'El campo :attribute debe contener entradas para: :values.',
     'required_if' => 'El campo :attribute es obligatorio cuando :other es :value.',
-    'required_if_accepted' => 'El campo :attribute es obligatorio cuando :other es aceptado.',
+    'required_if_accepted' => 'El campo es obligatorio cuando :other es aceptado.',
     'required_if_declined' => 'El campo :attribute es obligatorio cuando :other es rechazado.',
     'required_unless' => 'El campo :attribute es obligatorio a menos que :other esté en :values.',
     'required_with' => 'El campo :attribute es obligatorio cuando :values está presente.',

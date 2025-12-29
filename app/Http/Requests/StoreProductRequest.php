@@ -17,7 +17,7 @@ class StoreProductRequest extends FormRequest
             'sold_by_retail' => ['required', 'boolean'],
             'category_id' => ['required', 'exists:categories,id'],
             'measure_unit_id' => ['required', 'exists:measure_units,id'],
-            'retail_measure_unit_id' => ['required_if:sold_by_retail,true', 'exists:measure_units,id'],
+            'retail_measure_unit_id' => ['nullable', 'required_if_accepted:sold_by_retail', 'exists:measure_units,id'],
         ];
     }
 
