@@ -50,6 +50,7 @@ const productsStore = useProductsStore();
 const productToEdit = ref<Product | null>(null);
 const showDestroyAlert = ref<boolean>(false);
 const showMessageAlert = ref<boolean>(false);
+const soldByRetail = ref<boolean>(false);
 
 /* Combo boxes */
 const openCategoryComboBox = ref<boolean>(false);
@@ -63,6 +64,9 @@ const selectedRetailMeasureUnitId = ref<number | ''>('');
 const handleMainFormFinish = () => {
     productsStore.clearIdToEdit();
     showMessageAlert.value = true;
+    selectedCategoryId.value = '';
+    selectedMeasureUnitId.value = '';
+    selectedRetailMeasureUnitId.value = '';
 };
 
 const handleDestroyFormFinish = () => {
@@ -99,6 +103,15 @@ productsStore.$subscribe((mutation, state) => {
                     :reset-on-success="true"
                     :onSuccess="handleMainFormFinish"
                     v-slot="{ errors, processing }"
+                    :transform="data => {
+                        return {
+                            ...data,
+                            category_id: selectedCategoryId || null,
+                            measure_unit_id: selectedMeasureUnitId || null,
+                            retail_measure_unit_id: soldByRetail ? selectedRetailMeasureUnitId || null : null,
+                            sold_by_retail: soldByRetail ? true : false,
+                        }
+                    }"
                     class="flex flex-col gap-4 w-full mt-4"
                 >
                     <div class="flex gap-4 w-full items-start">
@@ -117,9 +130,10 @@ productsStore.$subscribe((mutation, state) => {
                             />
                             <InputError :message="errors.name" />
                         </div>
-                        <div class="flex items-center justify-center w-full self-center">
+                        <div class="flex flex-col gap-2 items-center justify-center w-full self-center">
                             <Label for="sold_by_retail" class="flex items-center justify-center space-x-3">
-                                <Checkbox id="sold_by_retail" name="sold_by_retail" :tabindex="2" :default-value="true"/>
+                                <Checkbox v-model="soldByRetail" :value:boolean="true" id="sold_by_retail" name="sold_by_retail" :tabindex="2"/>
+                                 <!-- <input type="checkbox" v-model="soldByRetail" id="sold_by_retail" name="sold_by_retail" :tabindex="2"/> -->
                                 <span>Vendido al menudeo</span>
                             </Label>
                             <InputError :message="errors.sold_by_retail" />
@@ -174,10 +188,11 @@ productsStore.$subscribe((mutation, state) => {
                                 </Command>
                                 </PopoverContent>
                             </Popover>
+                            <InputError :message="errors.category_id" />
                         </div>
                         <!-- Measure unit combo box -->
                         <div class="grid gap-2 w-full">
-                            <Label for="measure_unit_id">Unidad de medida</Label>
+                            <Label for="measure_unit_id">Presentación al mayoreo</Label>
                             <Popover v-model:open="openMeasureUnitComboBox">
                                 <PopoverTrigger as-child>
                                 <Button
@@ -225,10 +240,11 @@ productsStore.$subscribe((mutation, state) => {
                                 </Command>
                                 </PopoverContent>
                             </Popover>
+                            <InputError :message="errors.measure_unit_id" />
                         </div>
                         <!-- Retail measure unit combo box -->
-                        <div class="grid gap-2 w-full">
-                            <Label for="retail_measure_unit_id">Unidad de medida al menudeo</Label>
+                        <div v-if="soldByRetail" class="grid gap-2 w-full">
+                            <Label for="retail_measure_unit_id">Presentación al menudeo</Label>
                             <Popover v-model:open="openRetailMeasureUnitComboBox">
                                 <PopoverTrigger as-child>
                                 <Button
@@ -276,6 +292,7 @@ productsStore.$subscribe((mutation, state) => {
                                 </Command>
                                 </PopoverContent>
                             </Popover>
+                            <InputError :message="errors.retail_measure_unit_id" />
                         </div>
                     </div>
 
