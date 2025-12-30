@@ -1,7 +1,7 @@
 import { Provider } from '@/types/main'
 import { ColumnDef } from '@tanstack/vue-table'
 import DropdownAction from '@/components/tables/providers/data-table-dropdown.vue'
-import { ArrowUpDown } from 'lucide-vue-next'
+import { ArrowUpDown, ChevronDown, ChevronUp } from 'lucide-vue-next'
 import Button from '@/components/ui/button/Button.vue'
 import { h } from 'vue'
 
@@ -12,12 +12,13 @@ export const columns: ColumnDef<Provider>[] = [
       return h(Button, {
         variant: 'ghost',
         onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-      }, () => ['Nombre', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })])
+      }, () => ['Nombre', h(column.getIsSorted() ? (column.getIsSorted() === 'asc' ? ChevronUp : ChevronDown) : ArrowUpDown, { class: 'ml-2 h-4 w-4' })])
     },
     cell: ({ row }) => {
         /* You can format here */
         return h('div', { class: 'text-left font-medium' }, row.getValue('name'))
     },
+    sortingFn: 'alphanumeric',
   },
   {
     accessorKey: 'email',
@@ -25,11 +26,12 @@ export const columns: ColumnDef<Provider>[] = [
       return h(Button, {
         variant: 'ghost',
         onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-      }, () => ['Correo Electrónico', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })])
+      }, () => ['Correo Electrónico', h(column.getIsSorted() ? (column.getIsSorted() === 'asc' ? ChevronUp : ChevronDown) : ArrowUpDown, { class: 'ml-2 h-4 w-4' })])
     },
     cell: ({ row }) => {
         return h('div', { class: 'text-left' }, row.getValue('email') || '—')
     },
+    sortingFn: 'alphanumeric',
   },
   {
     accessorKey: 'phone',
@@ -37,11 +39,12 @@ export const columns: ColumnDef<Provider>[] = [
       return h(Button, {
         variant: 'ghost',
         onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-      }, () => ['Teléfono', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })])
+      }, () => ['Teléfono', h(column.getIsSorted() ? (column.getIsSorted() === 'asc' ? ChevronUp : ChevronDown) : ArrowUpDown, { class: 'ml-2 h-4 w-4' })])
     },
     cell: ({ row }) => {
         return h('div', { class: 'text-left' }, row.getValue('phone') || '—')
     },
+    sortingFn: 'alphanumeric',
   },
   {
     accessorKey: 'address',
@@ -49,11 +52,12 @@ export const columns: ColumnDef<Provider>[] = [
       return h(Button, {
         variant: 'ghost',
         onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-      }, () => ['Dirección', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })])
+      }, () => ['Dirección', h(column.getIsSorted() ? (column.getIsSorted() === 'asc' ? ChevronUp : ChevronDown) : ArrowUpDown, { class: 'ml-2 h-4 w-4' })])
     },
     cell: ({ row }) => {
         return h('div', { class: 'text-left' }, row.getValue('address') || '—')
     },
+    sortingFn: 'alphanumeric',
   },
   {
     accessorKey: 'contact_person',
@@ -61,11 +65,12 @@ export const columns: ColumnDef<Provider>[] = [
       return h(Button, {
         variant: 'ghost',
         onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-      }, () => ['Persona de Contacto', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })])
+      }, () => ['Persona de Contacto', h(column.getIsSorted() ? (column.getIsSorted() === 'asc' ? ChevronUp : ChevronDown) : ArrowUpDown, { class: 'ml-2 h-4 w-4' })])
     },
     cell: ({ row }) => {
         return h('div', { class: 'text-left' }, row.getValue('contact_person') || '—')
     },
+    sortingFn: 'alphanumeric',
   },
   {
     accessorKey: 'actions',

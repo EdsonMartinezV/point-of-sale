@@ -26,3 +26,24 @@ export function valueUpdater<T extends Updater<any>>(updaterOrValue: T, ref: Ref
     ? updaterOrValue(ref.value)
     : updaterOrValue
 }
+
+interface Related {
+  name: string
+};
+
+interface Row {
+  getValue: (columnId: string) => Related
+}
+
+export const sortingFn = (rowA:Row, rowB:Row, columnId:string) => {
+  const a:Related = rowA.getValue(columnId) || null;
+  const b:Related = rowB.getValue(columnId) || null;
+
+  const nameA = a?.name;
+  const nameB = b?.name;
+
+  if (nameA === undefined || nameA === null) return 1;
+  if (nameB === undefined || nameB === null) return -1;
+
+  return String(nameA).localeCompare(String(nameB), undefined, { numeric: true });
+};

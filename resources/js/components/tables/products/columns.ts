@@ -4,6 +4,7 @@ import DropdownAction from '@/components/tables/products/data-table-dropdown.vue
 import { ArrowUpDown, ChevronDown, ChevronUp, X, Check } from 'lucide-vue-next'
 import Button from '@/components/ui/button/Button.vue'
 import { h } from 'vue'
+import { sortingFn } from '@/lib/utils'
 
 export const columns: ColumnDef<Product>[] = [
   {
@@ -18,6 +19,8 @@ export const columns: ColumnDef<Product>[] = [
         /* You can format here */
         return h('div', { class: 'text-left font-medium' }, row.getValue('name'))
     },
+    sortingFn: 'alphanumeric',
+    sortUndefined: 'last',
   },
   {
     accessorKey: 'sold_by_retail',
@@ -81,6 +84,7 @@ export const columns: ColumnDef<Product>[] = [
 
         return h('div', { class: 'text-right font-medium' }, first_wholesale_percentage ? formatted : '-')
     },
+    sortingFn: 'alphanumeric',
   },
   {
     accessorKey: 'second_wholesale_percentage',
@@ -100,6 +104,7 @@ export const columns: ColumnDef<Product>[] = [
 
         return h('div', { class: 'text-right font-medium' }, second_wholesale_percentage ? formatted : '-');
     },
+    sortingFn: 'alphanumeric',
   },
   {
     accessorKey: 'third_wholesale_percentage',
@@ -119,6 +124,7 @@ export const columns: ColumnDef<Product>[] = [
 
         return h('div', { class: 'text-right font-medium' }, third_wholesale_percentage ? formatted : '-');
     },
+    sortingFn: 'alphanumeric',
   },
   {
     accessorKey: 'retail_percentage',
@@ -138,6 +144,7 @@ export const columns: ColumnDef<Product>[] = [
 
         return h('div', { class: 'text-right font-medium' }, retail_percentage ? formatted : '-');
     },
+    sortingFn: 'alphanumeric',
   },
   {
     accessorKey: 'category',
@@ -157,6 +164,7 @@ export const columns: ColumnDef<Product>[] = [
 
         return h('div', { class: 'text-right font-medium' }, category.name);
     },
+    sortingFn
   },
   {
     accessorKey: 'measure_unit',
@@ -176,6 +184,7 @@ export const columns: ColumnDef<Product>[] = [
 
         return h('div', { class: 'text-right font-medium' }, measure_unit?.name)
     },
+    sortingFn
   },
   {
     accessorKey: 'retail_measure_unit',
@@ -195,6 +204,7 @@ export const columns: ColumnDef<Product>[] = [
 
         return h('div', { class: 'text-right font-medium' }, retail_measure_unit?.name)
     },
+    sortingFn
   },
   {
     accessorKey: 'actions',
