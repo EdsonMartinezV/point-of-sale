@@ -111,7 +111,6 @@ measureUnitsStore.$subscribe((mutation, state) => {
                         class="w-full"
                         :tabindex="3"
                         :disabled="processing"
-                        data-test="register-user-button"
                     >
                         <LoaderCircle
                             v-if="processing"

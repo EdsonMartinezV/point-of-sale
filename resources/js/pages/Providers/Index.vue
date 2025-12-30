@@ -150,7 +150,6 @@ providersStore.$subscribe((mutation, state) => {
                         class="w-full"
                         :tabindex="6"
                         :disabled="processing"
-                        data-test="register-user-button"
                     >
                         <LoaderCircle
                             v-if="processing"
