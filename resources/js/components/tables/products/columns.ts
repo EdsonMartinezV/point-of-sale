@@ -28,7 +28,7 @@ export const columns: ColumnDef<Product>[] = [
       }, () => ['Vendido al menudeo', h(column.getIsSorted() ? (column.getIsSorted() === 'asc' ? ChevronUp : ChevronDown) : ArrowUpDown, { class: 'ml-2 h-4 w-4' })])
     },
     cell: ({ row }) => {
-        return h(Number.parseInt(row.getValue('sold_by_retail')) === 0 ? X : Check, { class: 'm-auto' });
+        return h(row.getValue('sold_by_retail') ? Check : X, { class: 'm-auto' });
     },
   },
   {

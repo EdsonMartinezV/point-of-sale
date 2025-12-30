@@ -25,9 +25,9 @@ export interface Product {
     second_wholesale_percentage?: number;
     third_wholesale_percentage?: number;
     retail_percentage?: number;
-    category_id?: number;
-    measure_unit_id?: number;
-    retail_measure_unit_id?: number;
+    category?: Category;
+    measure_unit?: MeasureUnit;
+    retail_measure_unit?: MeasureUnit;
 }
 
 export interface MeasureUnit {

@@ -57,16 +57,17 @@ const openCategoryComboBox = ref<boolean>(false);
 const openMeasureUnitComboBox = ref<boolean>(false);
 const openRetailMeasureUnitComboBox = ref<boolean>(false);
 
-const selectedCategoryId = ref<number | ''>('');
-const selectedMeasureUnitId = ref<number | ''>('');
-const selectedRetailMeasureUnitId = ref<number | ''>('');
+const selectedCategoryId = ref<number | null | ''>(null);
+const selectedMeasureUnitId = ref<number | null | ''>(null);
+const selectedRetailMeasureUnitId = ref<number | null | ''>(null);
 
 const handleMainFormFinish = () => {
     productsStore.clearIdToEdit();
     showMessageAlert.value = true;
-    selectedCategoryId.value = '';
-    selectedMeasureUnitId.value = '';
-    selectedRetailMeasureUnitId.value = '';
+    selectedCategoryId.value = null;
+    selectedMeasureUnitId.value = null;
+    selectedRetailMeasureUnitId.value = null;
+    soldByRetail.value = false;
 };
 
 const handleDestroyFormFinish = () => {
@@ -77,7 +78,18 @@ const handleDestroyFormFinish = () => {
 productsStore.$subscribe((mutation, state) => {
     if (state.idToEdit !== null) {
         const product = props.products.find(p => p.id === state.idToEdit) || null;
+        console.log('Editing product:', product);
         productToEdit.value = product;
+        soldByRetail.value = productToEdit.value?.sold_by_retail ?? false;
+        selectedCategoryId.value = productToEdit.value?.category?.id ?? null;
+        selectedMeasureUnitId.value = productToEdit.value?.measure_unit?.id ?? null;
+        selectedRetailMeasureUnitId.value = productToEdit.value?.retail_measure_unit?.id ?? null;
+        console.log({
+            soldByRetail: soldByRetail.value,
+            selectedCategoryId: selectedCategoryId.value,
+            selectedMeasureUnitId: selectedMeasureUnitId.value,
+            selectedRetailMeasureUnitId: selectedRetailMeasureUnitId.value,
+        })
     } else {
         productToEdit.value = null;
     }

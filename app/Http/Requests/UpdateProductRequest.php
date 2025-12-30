@@ -17,7 +17,7 @@ class UpdateProductRequest extends FormRequest
             'sold_by_retail' => ['nullable', 'boolean'],
             'category_id' => ['nullable', 'exists:categories,id'],
             'measure_unit_id' => ['nullable', 'exists:measure_units,id'],
-            'retail_measure_unit_id' => ['required_if:sold_by_retail,true', 'exists:measure_units,id'],
+            'retail_measure_unit_id' => ['nullable', 'required_if:sold_by_retail,true', 'exists:measure_units,id'],
         ];
     }
 
