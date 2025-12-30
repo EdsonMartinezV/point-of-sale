@@ -51,7 +51,7 @@ const mainNavItems: NavItem[] = [
         icon: Milk,
     },
     {
-        title: 'Unidades de medida',
+        title: 'Presentaciones',
         href: MeasureUnitController.index(),
         icon: Weight,
     },
