@@ -19,7 +19,6 @@ export const columns: ColumnDef<Category>[] = [
         return h('div', { class: 'text-left font-medium' }, row.getValue('name'))
     },
     sortingFn: 'alphanumeric',
-    sortUndefined: 'last',
   },
   {
     accessorKey: 'description',
@@ -33,7 +32,6 @@ export const columns: ColumnDef<Category>[] = [
         return h('div', { class: 'text-left' }, row.getValue('description') || '—')
     },
     sortingFn: 'alphanumeric',
-    sortUndefined: 'last',
   },
   {
     accessorKey: 'actions',

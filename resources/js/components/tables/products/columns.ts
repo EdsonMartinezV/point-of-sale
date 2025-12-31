@@ -20,7 +20,6 @@ export const columns: ColumnDef<Product>[] = [
         return h('div', { class: 'text-left font-medium' }, row.getValue('name'))
     },
     sortingFn: 'alphanumeric',
-    sortUndefined: 'last',
   },
   {
     accessorKey: 'sold_by_retail',
