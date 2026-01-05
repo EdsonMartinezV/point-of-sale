@@ -65,7 +65,22 @@ class PurchaseController extends Controller
             $setNewAsCurrent = false;
             if ($product->sold_by_retail) {
                 /* Product has ran out and this product data gets in */
-                if ($currentPriceModification->total_retail_remaining_stock == 0) {
+                /* If there is no currentPriceModification, it is the first purchase */
+                if ($currentPriceModification) {
+                    if ($currentPriceModification->total_retail_remaining_stock == 0) {
+                        $setNewAsCurrent = true;
+
+                        $product->update([
+                            'sold_by_retail' => $item['sold_by_retail'],
+                            'retail_units_per_box' => $item['retail_units_per_box'],
+                            'cost_price' => $item['cost_price'],
+                            'first_wholesale_percentage' => $item['first_wholesale_percentage'] / 100,
+                            'second_wholesale_percentage' => $item['second_wholesale_percentage'] / 100,
+                            'third_wholesale_percentage' => $item['third_wholesale_percentage'] / 100,
+                            'retail_percentage' => $item['sold_by_retail'] ? $item['retail_percentage'] / 100 : null,
+                        ]);
+                    }
+                } else {
                     $setNewAsCurrent = true;
 
                     $product->update([
@@ -79,7 +94,22 @@ class PurchaseController extends Controller
                     ]);
                 }
             /* Product has ran out and this product data gets in */
-            } else if ($currentPriceModification->remaining_stock == 0) {
+            /* If there is no currentPriceModification, it is the first purchase */
+            } else if ($currentPriceModification) {
+                if ($currentPriceModification->remaining_stock == 0) {
+                    $setNewAsCurrent = true;
+
+                    $product->update([
+                        'sold_by_retail' => $item['sold_by_retail'],
+                        'retail_units_per_box' => $item['retail_units_per_box'],
+                        'cost_price' => $item['cost_price'],
+                        'first_wholesale_percentage' => $item['first_wholesale_percentage'] / 100,
+                        'second_wholesale_percentage' => $item['second_wholesale_percentage'] / 100,
+                        'third_wholesale_percentage' => $item['third_wholesale_percentage'] / 100,
+                        'retail_percentage' => $item['sold_by_retail'] ? $item['retail_percentage'] / 100 : null,
+                    ]);
+                }
+            } else {
                 $setNewAsCurrent = true;
 
                 $product->update([
