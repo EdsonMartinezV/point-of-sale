@@ -145,7 +145,6 @@ productsStore.$subscribe((mutation, state) => {
                         <div class="flex flex-col gap-2 items-center justify-center w-full self-center">
                             <Label for="sold_by_retail" class="flex items-center justify-center space-x-3">
                                 <Checkbox v-model="soldByRetail" :value:boolean="true" id="sold_by_retail" name="sold_by_retail" :tabindex="2"/>
-                                 <!-- <input type="checkbox" v-model="soldByRetail" id="sold_by_retail" name="sold_by_retail" :tabindex="2"/> -->
                                 <span>Vendido al menudeo</span>
                             </Label>
                             <InputError :message="errors.sold_by_retail" />

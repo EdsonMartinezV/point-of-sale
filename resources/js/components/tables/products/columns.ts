@@ -1,4 +1,4 @@
-import { Product } from '@/types/main'
+import { Category, MeasureUnit, Product } from '@/types/main'
 import { ColumnDef } from '@tanstack/vue-table'
 import DropdownAction from '@/components/tables/products/data-table-dropdown.vue'
 import { ArrowUpDown, ChevronDown, ChevronUp, X, Check } from 'lucide-vue-next'
@@ -155,11 +155,7 @@ export const columns: ColumnDef<Product>[] = [
     },
     cell: ({ row }) => {
         /* You can format here */
-        const category:{
-          id: string | number,
-          name: string
-          description: string | null
-        } = row.getValue('category');
+        const category:Category = row.getValue('category');
 
         return h('div', { class: 'text-right font-medium' }, category.name);
     },
@@ -175,11 +171,7 @@ export const columns: ColumnDef<Product>[] = [
     },
     cell: ({ row }) => {
         /* You can format here */
-        const measure_unit:{
-          id: string | number,
-          name: string,
-          abbreviation: string
-        } = row.getValue('measure_unit');
+        const measure_unit:MeasureUnit = row.getValue('measure_unit');
 
         return h('div', { class: 'text-right font-medium' }, measure_unit?.name)
     },
@@ -195,11 +187,7 @@ export const columns: ColumnDef<Product>[] = [
     },
     cell: ({ row }) => {
         /* You can format here */
-        const retail_measure_unit:{
-          id: string | number,
-          name: string,
-          abbreviation: string
-        } = row.getValue('retail_measure_unit');
+        const retail_measure_unit:MeasureUnit = row.getValue('retail_measure_unit');
 
         return h('div', { class: 'text-right font-medium' }, retail_measure_unit?.name)
     },
