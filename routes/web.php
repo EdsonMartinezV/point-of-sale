@@ -61,7 +61,7 @@ Route::middleware(['auth'])->prefix('/purchases')->controller(PurchaseController
     Route::get('/{id}', 'show')->name('purchases.show');
     Route::post('/', 'store')->name('purchases.store');
     Route::put('/{id}', 'update')->name('purchases.update');
-    Route::delete('/{id}', 'destroy')->name('purchases.destroy');
+    /* Route::delete('/{id}', 'destroy')->name('purchases.destroy'); */
 });
 
 Route::middleware(['auth'])->prefix('/sales')->controller(SaleController::class)->group(function () {
@@ -69,5 +69,5 @@ Route::middleware(['auth'])->prefix('/sales')->controller(SaleController::class)
     Route::get('/{id}', 'show')->name('sales.show');
     Route::post('/', 'store')->name('sales.store');
     Route::put('/{id}', 'update')->name('sales.update');
-    Route::delete('/{id}', 'destroy')->name('sales.destroy');
+    /* Route::delete('/{id}', 'destroy')->name('sales.destroy'); */
 });

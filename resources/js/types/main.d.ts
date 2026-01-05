@@ -13,6 +13,12 @@ export interface Category {
     description?: string;
 }
 
+export interface MeasureUnit {
+    id: number;
+    name: string;
+    abbreviation: string;
+}
+
 export interface Product {
     id: number;
     name: string;
@@ -30,8 +36,32 @@ export interface Product {
     retail_measure_unit?: MeasureUnit;
 }
 
-export interface MeasureUnit {
+export interface PriceModification {
     id: number;
-    name: string;
-    abbreviation: string;
+    is_current: boolean;
+    sold_by_retail: boolean;
+    retail_units_per_box: number;
+    remaining_stock: number;
+    retail_remaining_stock: number;
+    cost_price: number;
+    first_wholesale_percentage: number;
+    second_wholesale_percentage: number;
+    third_wholesale_percentage: number;
+    retail_percentage: number;
+}
+
+export interface PurchaseItem {
+    id: number;
+    quantity: number;
+    product: Product;
+    price_modification: PriceModification;
+}
+
+export interface Purchase {
+    id: number;
+    total: number;
+    created_by: string;
+    provider: Provider;
+    purchase_items: PurchaseItem[];
+    created_at: string;
 }

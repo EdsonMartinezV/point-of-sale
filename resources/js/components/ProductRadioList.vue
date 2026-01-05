@@ -59,7 +59,8 @@ function formatPrice(value: any) {
           <div v-if="showPrice && p.price !== undefined" class="text-sm text-gray-700">{{ formatPrice(p.price) }}</div>
 
           <input
-            :autofocus="index === 0"
+            :autofocus="index === 1"
+            :tabindex="index + 2"
             type="radio"
             :value="p[valueKey]"
             v-model="model"
