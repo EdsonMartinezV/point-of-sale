@@ -17,7 +17,7 @@ return new class extends Migration
             $table->boolean('sold_by_retail')->default(false);
             $table->integer('retail_units_per_box')->nullable();
             $table->integer('remaining_stock');
-            $table->integer('remaining_retail_stock')->nullable();
+            $table->integer('retail_remaining_stock')->nullable();
             $table->decimal('cost_price', 10, 2)->nullable();
             $table->decimal('first_wholesale_percentage', 3, 2)->default(0.10);
             $table->decimal('second_wholesale_percentage', 3, 2)->default(0.08);

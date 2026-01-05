@@ -79,6 +79,20 @@ const selectedProviderId = ref<number | null | ''>(null);
 const handleMainFormFinish = () => {
     purchasesStore.clearIdToEdit();
     showMessageAlert.value = true;
+
+    selectedProductId.value = null;
+    selectedProviderId.value = null;
+    quantity.value = null;
+    soldByRetail.value = false;
+    retailUnitsPerBox.value = null;
+    costPrice.value = null;
+    firstWholesalePercentage.value = null;
+    secondWholesalePercentage.value = null;
+    thirdWholesalePercentage.value = null;
+    retailPercentage.value = null;
+
+    q.value = '';
+    products.value = [];
 };
 
 purchasesStore.$subscribe((mutation, state) => {
@@ -175,7 +189,8 @@ const search = async () => {
                 />
 
                 <template v-if="selectedProduct">
-                    <Separator />
+                    <Separator class="my-12"/>
+                    <h2 class="font-medium text-lg">{{ selectedProduct.name }}</h2>
 
                     <Form
                         v-bind="PurchaseController.store.form()"

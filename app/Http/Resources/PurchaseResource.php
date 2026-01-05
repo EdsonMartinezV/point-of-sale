@@ -17,10 +17,10 @@ class PurchaseResource extends JsonResource
         return [
             'id' => $this->id,
             'total' => $this->total,
-            'created_by' => $this->user->name,
+            'created_by' => $this->user->nickname,
             'provider' => new ProviderResource($this->whenLoaded('provider')),
             'purchase_items' => PurchaseItemResource::collection($this->whenLoaded('purchaseItems')),
-            'created_at' => Carbon::createFromTimestamp($this->created_at)->toDateTimeString('minute'),
+            'created_at' => new Carbon($this->created_at)->toDateTimeString('minute'),
         ];
     }
 }
