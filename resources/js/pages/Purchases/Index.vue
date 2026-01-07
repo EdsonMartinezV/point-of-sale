@@ -219,7 +219,7 @@ const search = async () => {
 
                         <div class="flex gap-4 w-full items-start">
                             <div class="grid gap-2 w-full">
-                                <Label for="total">Total {{ total }}</Label>
+                                <Label for="total">Total<span class="text-red-500">*</span></Label>
                                 <Input
                                     id="total"
                                     v-model="total"
@@ -235,7 +235,7 @@ const search = async () => {
                             </div>
                             <!-- Provider combo box -->
                             <div class="grid gap-2 w-full">
-                                <Label for="provider_id">Proveedor</Label>
+                                <Label for="provider_id">Proveedor<span class="text-red-500">*</span></Label>
                                 <Popover v-model:open="openProviderComboBox">
                                     <PopoverTrigger as-child>
                                     <Button
@@ -287,7 +287,7 @@ const search = async () => {
                             </div>
 
                             <div class="grid gap-2 w-full">
-                                <Label for="quantity">Cantidad {{ quantity }}</Label>
+                                <Label for="quantity">Cantidad<span class="text-red-500">*</span></Label>
                                 <Input
                                     id="quantity"
                                     v-model="quantity"
@@ -311,7 +311,7 @@ const search = async () => {
                             </div>
 
                             <div class="grid gap-2 w-full">
-                                <Label for="retail_units_per_box">Unidades por caja</Label>
+                                <Label for="retail_units_per_box">Unidades por caja<span class="text-red-500">*</span></Label>
                                 <Input
                                     id="retail_units_per_box"
                                     v-model="retailUnitsPerBox"
@@ -329,7 +329,7 @@ const search = async () => {
 
                         <div class="flex gap-4 w-full items-start">
                             <div class="grid gap-2 w-full">
-                                <Label for="cost_price">Precio de costo {{ costPrice }}</Label>
+                                <Label for="cost_price">Precio de costo<span class="text-red-500">*</span></Label>
                                 <Input
                                     id="cost_price"
                                     v-model="costPrice"
@@ -345,7 +345,7 @@ const search = async () => {
                             </div>
 
                             <div class="grid gap-2 w-full">
-                                <Label for="first_wholesale_percentage">Primer margen de ganancia <span class="text-red">(%)</span></Label>
+                                <Label for="first_wholesale_percentage">Primer margen de ganancia (%)<span class="text-red-500">*</span></Label>
                                 <Input
                                     id="first_wholesale_percentage"
                                     v-model="firstWholesalePercentage"
@@ -361,7 +361,7 @@ const search = async () => {
                             </div>
 
                             <div class="grid gap-2 w-full">
-                                <Label for="second_wholesale_percentage">Segundo margen de ganancia <span class="text-red">(%)</span></Label>
+                                <Label for="second_wholesale_percentage">Segundo margen de ganancia (%)<span class="text-red-500">*</span></Label>
                                 <Input
                                     id="second_wholesale_percentage"
                                     v-model="secondWholesalePercentage"
@@ -377,7 +377,7 @@ const search = async () => {
                             </div>
 
                             <div class="grid gap-2 w-full">
-                                <Label for="third_wholesale_percentage">Tercer margen de ganancia <span class="text-red">(%)</span></Label>
+                                <Label for="third_wholesale_percentage">Tercer margen de ganancia (%)<span class="text-red-500">*</span></Label>
                                 <Input
                                     id="third_wholesale_percentage"
                                     v-model="thirdWholesalePercentage"
@@ -393,7 +393,7 @@ const search = async () => {
                             </div>
 
                             <div v-if="soldByRetail" class="grid gap-2 w-full">
-                                <Label for="retail_percentage">Margen de ganancia al menudeo <span class="text-red">(%)</span></Label>
+                                <Label for="retail_percentage">Margen de ganancia al menudeo (%)<span class="text-red-500">*</span></Label>
                                 <Input
                                     id="retail_percentage"
                                     v-model="retailPercentage"

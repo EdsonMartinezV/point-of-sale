@@ -92,7 +92,7 @@ measureUnitsStore.$subscribe((mutation, state) => {
                             <InputError :message="errors.name" />
                         </div>
                         <div class="grid gap-2 w-full">
-                            <Label for="abbreviation">Abreviatura</Label>
+                            <Label for="abbreviation">Abreviatura<span class="text-red-500">*</span></Label>
                             <Input
                                 id="abbreviation"
                                 :model-value="measureUnitToEdit?.abbreviation"

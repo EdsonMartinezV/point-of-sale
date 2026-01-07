@@ -78,18 +78,12 @@ const handleDestroyFormFinish = () => {
 productsStore.$subscribe((mutation, state) => {
     if (state.idToEdit !== null) {
         const product = props.products.find(p => p.id === state.idToEdit) || null;
-        console.log('Editing product:', product);
+
         productToEdit.value = product;
         soldByRetail.value = productToEdit.value?.sold_by_retail ?? false;
         selectedCategoryId.value = productToEdit.value?.category?.id ?? null;
         selectedMeasureUnitId.value = productToEdit.value?.measure_unit?.id ?? null;
         selectedRetailMeasureUnitId.value = productToEdit.value?.retail_measure_unit?.id ?? null;
-        console.log({
-            soldByRetail: soldByRetail.value,
-            selectedCategoryId: selectedCategoryId.value,
-            selectedMeasureUnitId: selectedMeasureUnitId.value,
-            selectedRetailMeasureUnitId: selectedRetailMeasureUnitId.value,
-        })
     } else {
         productToEdit.value = null;
     }
@@ -151,7 +145,7 @@ productsStore.$subscribe((mutation, state) => {
                         </div>
                         <!-- Category combo box -->
                         <div class="grid gap-2 w-full">
-                            <Label for="category_id">Categoría</Label>
+                            <Label for="category_id">Categoría<span class="text-red-500">*</span></Label>
                             <Popover v-model:open="openCategoryComboBox">
                                 <PopoverTrigger as-child>
                                 <Button
@@ -203,7 +197,7 @@ productsStore.$subscribe((mutation, state) => {
                         </div>
                         <!-- Measure unit combo box -->
                         <div class="grid gap-2 w-full">
-                            <Label for="measure_unit_id">Presentación al mayoreo</Label>
+                            <Label for="measure_unit_id">Presentación al mayoreo<span class="text-red-500">*</span></Label>
                             <Popover v-model:open="openMeasureUnitComboBox">
                                 <PopoverTrigger as-child>
                                 <Button
@@ -255,7 +249,7 @@ productsStore.$subscribe((mutation, state) => {
                         </div>
                         <!-- Retail measure unit combo box -->
                         <div v-if="soldByRetail" class="grid gap-2 w-full">
-                            <Label for="retail_measure_unit_id">Presentación al menudeo</Label>
+                            <Label for="retail_measure_unit_id">Presentación al menudeo<span class="text-red-500">*</span></Label>
                             <Popover v-model:open="openRetailMeasureUnitComboBox">
                                 <PopoverTrigger as-child>
                                 <Button

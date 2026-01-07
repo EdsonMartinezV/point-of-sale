@@ -13,7 +13,7 @@ class StorePurchaseRequest extends FormRequest
 
     public function rules() {
         return [
-            'total' => ['required', 'numeric', 'min:0'],
+            'total' => ['required', 'numeric', 'min:1'],
             'provider_id' => ['required', 'exists:providers,id'],
             /* PURCHASE ITEMS */
             'purchase_items' => ['required', 'array'],
@@ -22,7 +22,7 @@ class StorePurchaseRequest extends FormRequest
             /* PRICE MODIFICATIONS */
             'purchase_items.*.sold_by_retail' => ['required', 'boolean'],
             'purchase_items.*.retail_units_per_box' => ['required', 'integer', 'min:1'],
-            'purchase_items.*.cost_price' => ['required', 'numeric', 'min:0'],
+            'purchase_items.*.cost_price' => ['required', 'numeric', 'min:1'],
             'purchase_items.*.first_wholesale_percentage' => ['required', 'integer', 'min:1', 'max:100'],
             'purchase_items.*.second_wholesale_percentage' => ['required', 'integer', 'min:1', 'max:100'],
             'purchase_items.*.third_wholesale_percentage' => ['required', 'integer', 'min:1', 'max:100'],
