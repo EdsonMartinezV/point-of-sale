@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class UpdateSaleRequest extends FormRequest
 {
     public function authorize() {
-        return true;
+        return false;
     }
 
     public function rules() {

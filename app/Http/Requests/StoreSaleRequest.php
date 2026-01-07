@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Sale;
 use App\Percentages;
 use App\Rules\HasStock;
 use Illuminate\Foundation\Http\FormRequest;
@@ -10,7 +11,7 @@ use Illuminate\Validation\Rule;
 class StoreSaleRequest extends FormRequest
 {
     public function authorize() {
-        return true;
+        return $this->user()->can('create', Sale::class);
     }
 
     public function rules() {

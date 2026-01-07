@@ -24,19 +24,19 @@ class ProviderPolicy
     }
 
     public function create(User $user): bool {
-        return false;
+        return $user->is_cashier;
     }
 
     public function update(User $user, Provider $provider): bool {
-        return false;
+        return $user->is_cashier;
     }
 
     public function delete(User $user, Provider $provider): bool {
-        return false;
+        return $user->is_cashier;
     }
 
     public function restore(User $user, Provider $provider): bool {
-        return false;
+        return $user->is_cashier;
     }
 
     public function forceDelete(User $user, Provider $provider): bool {

@@ -28,19 +28,19 @@ class ProductPolicy
     }
 
     public function update(User $user, Product $product): bool {
-        return $user->is_cashier;
+        return false;
     }
 
     public function delete(User $user, Product $product): bool {
-        return $user->is_cashier;
+        return false;
     }
 
     public function restore(User $user, Product $product): bool {
-        return $user->is_cashier;
+        return false;
     }
 
     public function forceDelete(User $user, Product $product): bool {
-        return $user->is_cashier;
+        return false;
     }
 
     public function import(User $user): bool {

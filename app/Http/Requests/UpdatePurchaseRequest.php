@@ -8,7 +8,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class UpdatePurchaseRequest extends FormRequest
 {
     public function authorize() {
-        return $this->user()->can('update', Purchase::class);
+        return false;
     }
 
     public function rules() {

@@ -24,22 +24,22 @@ class CategoryPolicy
     }
 
     public function create(User $user): bool {
-        return false;
+        return $user->is_cashier;
     }
 
     public function update(User $user, Category $category): bool {
-        return false;
+        return $user->is_cashier;
     }
 
     public function delete(User $user, Category $category): bool {
-        return false;
+        return $user->is_cashier;
     }
 
     public function restore(User $user, Category $category): bool {
-        return false;
+        return $user->is_cashier;
     }
 
     public function forceDelete(User $user, Category $category): bool {
-        return false;
+        return $user->is_cashier;
     }
 }
