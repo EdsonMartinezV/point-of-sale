@@ -65,3 +65,23 @@ export interface Purchase {
     purchase_items: PurchaseItem[];
     created_at: string;
 }
+
+export interface SaleItem {
+    id: number;
+    quantity: number;
+    is_retail_sale: boolean;
+    selected_percentage: string;
+    total: number;
+    product: Product;
+    price_modification: PriceModification;
+}
+
+export interface Sale {
+    id: number;
+    client: string;
+    total: number;
+    paid_amount: number;
+    change_amount: number;
+    created_by: string;
+    created_at: string;
+}

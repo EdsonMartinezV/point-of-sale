@@ -7,6 +7,7 @@ use App\Models\Sale;
 use App\Models\SaleItem;
 use App\Http\Requests\StoreSaleRequest;
 use App\Http\Requests\UpdateSaleRequest;
+use App\Http\Resources\SaleResource;
 use App\Models\PriceModification;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
@@ -14,9 +15,13 @@ use Illuminate\Support\Facades\DB;
 class SaleController extends Controller
 {
     public function index() {
-        $sales = Sale::with('items')->get();
+        $sales = Sale::with([
+            'saleItems' => [
+                'product',
+                'priceModification'
+        ]])->get();
         return Inertia::render('Sales/Index', [
-            'sales' => $sales,
+            'sales' => SaleResource::collection($sales),
         ]);
     }
 
@@ -28,8 +33,8 @@ class SaleController extends Controller
     }
 
     public function store(StoreSaleRequest $request) {
+        dd($request);
         $validated = $request->validated();
-
         $sale = Sale::create([
             'client' => $validated['client'],
             'total' => $validated['total'],
