@@ -1,6 +1,6 @@
 import { Provider, Purchase, PurchaseItem } from '@/types/main'
 import { ColumnDef } from '@tanstack/vue-table'
-import DropdownAction from '@/components/tables/purchases/data-table-dropdown.vue'
+/* import DropdownAction from '@/components/tables/purchases/data-table-dropdown.vue' */
 import { ArrowUpDown, Check, ChevronDown, ChevronUp, X } from 'lucide-vue-next'
 import Button from '@/components/ui/button/Button.vue'
 import { h } from 'vue'
@@ -285,7 +285,7 @@ export const columns: ColumnDef<Purchase>[] = [
     },
     sortingFn: 'datetime',
   },
-  {
+  /* {
     accessorKey: 'actions',
     enableHiding: false,
     header: () => h('div', { class: '' }, ''),
@@ -295,5 +295,5 @@ export const columns: ColumnDef<Purchase>[] = [
             purchaseId: purchase.id
         }))
     },
-  }
+  } */
 ]

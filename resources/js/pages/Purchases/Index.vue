@@ -144,7 +144,7 @@ const search = async () => {
 
     <AppLayout>
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-            <!-- Round box -->
+            <!-- Form box -->
             <div class="relative scroll-auto rounded-xl border border-sidebar-border/70 dark:border-sidebar-border p-4 space-y-4">
                 <h2 class="font-medium text-lg">Nueva compra</h2>
                 <Form
