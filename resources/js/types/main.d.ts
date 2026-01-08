@@ -70,10 +70,19 @@ export interface SaleItem {
     id: number;
     quantity: number;
     is_retail_sale: boolean;
-    selected_percentage: string;
+    selected_percentage: 'first_wholesome_percentage' | 'second_wholesome_percentage' | 'third_wholesome_percentage' | 'retail_percentage';
     total: number;
     product: Product;
     price_modification: PriceModification;
+}
+
+export interface FormSaleItem {
+    quantity?: number;
+    is_retail_sale?: boolean;
+    selected_percentage?: 'first_wholesome_percentage' | 'second_wholesome_percentage' | 'third_wholesome_percentage' | 'retail_percentage';
+    total?: number;
+    product_id?: number;
+    price_modification_id?: number;
 }
 
 export interface Sale {

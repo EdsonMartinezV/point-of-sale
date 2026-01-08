@@ -23,13 +23,14 @@ import {
 } from '@/components/ui/number-field';
 import { Separator } from '@/components/ui/separator';
 import InputError from '@/components/InputError.vue';
-import { LoaderCircle } from 'lucide-vue-next';
+import { LoaderCircle, XCircle } from 'lucide-vue-next';
 
-import type { Sale } from '@/types/main';
+import { FormSaleItem, type Product, type Sale } from '@/types/main';
 import SaleController from '@/actions/App/Http/Controllers/SaleController';
 import ProductController from '@/actions/App/Http/Controllers/ProductController';
 import { columns } from '@/components/tables/sales/columns';
 import { useSalesStore } from '@/stores/sales';
+import { Checkbox } from '@/components/ui/checkbox';
 
 const props = defineProps<{
   sales: Sale[];
@@ -41,9 +42,13 @@ const showMessageAlert = ref<boolean>(false);
 
 /* Search */
 const q = ref<string>('');
-const products = ref<any[]>([]);
+const searchProducts = ref<any[]>([]);
 const loading = ref<boolean>(false);
 const error = ref<string | null>(null);
+
+/* Form */
+const selectedProducts = ref<Product[]>([]);
+const formSaleItems = ref<FormSaleItem[]>([]);
 
 /* Money */
 const total = computed(() => {
@@ -70,6 +75,29 @@ const handleMainFormFinish = () => {
     salesStore.clearIdToEdit();
     showMessageAlert.value = true;
 };
+
+const addProduct = (productId: number) => {
+    const exists = selectedProducts.value.find(product => product.id = productId) ? true : false;
+    if (!exists) {
+        const product = searchProducts.value.find(product => product.id = productId);
+        selectedProducts.value.push(product);
+        formSaleItems.value.push({
+            quantity: 0,
+            is_retail_sale: false,
+            selected_percentage: 'first_wholesome_percentage',
+            total: 0,
+            product_id: productId,
+        });
+        searchProducts.value = [];
+        console.log(selectedProducts.value, formSaleItems.value);
+    } else {
+        console.log('no')
+    }
+}
+
+const removeProduct = (productId: number) => {
+    selectedProducts.value = selectedProducts.value.filter(product => product.id !== productId);
+}
 
 salesStore.$subscribe((mutation, state) => {
     if (state.idToEdit !== null) {
@@ -100,7 +128,7 @@ const search = async () => {
 
         const json = await res.json();
         // If using a resource collection it may be { data: [...] }
-        products.value = json.data ?? json;
+        searchProducts.value = json.data ?? json;
     } catch (err: any) {
         error.value = err?.message ?? String(err);
     } finally {
@@ -152,9 +180,23 @@ const search = async () => {
                     </Button>
                 </Form>
 
-                <!-- Products section -->
-                <Separator class="my-12"/>
-                <h2 class="font-medium text-lg">Productos</h2>
+                <template v-if="searchProducts.length > 0">
+                    <Separator class="my-12"/>
+                    <h2 class="font-medium text-lg">Selecciona un producto</h2>
+                    <div class="flex flex-col gap-2 w-full">
+                        <Button
+                            v-for="(product, index) in searchProducts"
+                            :key="product.id"
+                            @click="addProduct(product.id)"
+                            :tabindex="index + 3"
+                            variant="outline"
+                            class="w-full text-left"
+                        >
+                            {{ product.name }} {{ product.id }}
+                        </Button>
+                    </div>
+                </template>
+
                 <Form
                     v-bind="SaleController.store.form()"
                     :reset-on-success="true"
@@ -163,11 +205,72 @@ const search = async () => {
                     :transform="data => {
                         return {
                             ...data,
-                            paid_amount: paidAmount
+                            paid_amount: paidAmount,
+                            sale_items: formSaleItems
                         }
                     }"
                     class="flex flex-col gap-4 w-full mt-4"
                 >
+                    <!-- Sale Items -->
+                    <template v-if="selectedProducts.length > 0">
+                        <Separator class="my-12"/>
+                        <h2 class="font-medium text-lg">Productos</h2>
+                        <div class="flex flex-col gap-2 w-full">
+                            <div
+                                v-for="(product, index) in selectedProducts"
+                                :key="product.id"
+                                class="flex gap-4 w-full items-start justify-between border rounded-2xl p-4"
+                            >
+                                <Label class="self-center text-lg w-full">{{ product.name }}</Label>
+
+                                <div class="flex flex-col gap-2 items-center justify-center w-full self-center">
+                                    <Label class="flex items-center justify-center space-x-3">
+                                        <Checkbox v-model="formSaleItems[index].is_retail_sale" :value:boolean="true" :name="`sale_items.${index}.is_retail_sale`" :tabindex="searchProducts.length + index + 3"/>
+                                        <span>Venta al menudeo?</span>
+                                    </Label>
+                                    <InputError :message="errors[`sale_items.${index}.is_retail_sale`]" />
+                                </div>
+
+                                <div class="grid gap-2 w-full">
+                                    <Label :for="`quantity_${index}`">Cantidad</Label>
+                                    <Input
+                                        :id="`quantity_${index}`"
+                                        :model-value="formSaleItems[index].quantity"
+                                        type="number"
+                                        step="1"
+                                        :tabindex="searchProducts.length + index + 3"
+                                        autocomplete="quantity"
+                                        :name="`sale_items.${index}.quantity`"
+                                        :placeholder="formSaleItems[index].is_retail_sale ? `${product.retail_measure_unit}(s)` : `${product.measure_unit}(s)`"
+                                    />
+                                    <InputError :message="errors[`sale_items.${index}.quantity`]" />
+                                </div>
+
+                                <div class="grid gap-2 w-full">
+                                    <Input
+                                        hidden
+                                        :id="`product_id_${index}`"
+                                        :model-value="formSaleItems[index].product_id"
+                                        type="number"
+                                        step="1"
+                                        readonly
+                                        :name="`sale_items.${index}.product_id`"
+                                    />
+                                    <InputError :message="errors[`sale_items.${index}.product_id`]" />
+                                </div>
+
+                                <Button
+                                    @click="removeProduct(product.id)"
+                                    variant="destructive"
+                                    :tabindex="searchProducts.length + index + 3"
+                                    class="self-end"
+                                >
+                                    <XCircle />
+                                </Button>
+                            </div>
+                        </div>
+                    </template>
+
                     <!-- Summary section -->
                     <Separator class="my-6"/>
                     <h2 class="font-medium text-lg">Resumen</h2>
@@ -179,7 +282,7 @@ const search = async () => {
                                 :model-value="saleToEdit?.client"
                                 type="text"
                                 autofocus
-                                :tabindex="1"
+                                :tabindex="searchProducts.length + selectedProducts.length + 3"
                                 autocomplete="client"
                                 name="client"
                                 placeholder="Nombre del cliente"
@@ -198,12 +301,12 @@ const search = async () => {
                                     required
                                     hidden
                                     readonly
-                                    :tabindex="2"
                                     name="total"
                                     autocomplete="total"
                                 />
                                 <Input
                                     v-model="formattedTotal"
+                                    :tabindex="searchProducts.length + selectedProducts.length + 4"
                                     type="text"
                                     class="text-right"
                                     readonly
@@ -232,7 +335,7 @@ const search = async () => {
                                     }"
                                 >
                                     <NumberFieldContent>
-                                        <NumberFieldInput :tabindex="3" class="text-right pr-2.5" />
+                                        <NumberFieldInput :tabindex="searchProducts.length + selectedProducts.length + 5" class="text-right pr-2.5" />
                                     </NumberFieldContent>
                                 </NumberField>
                                 <InputError :message="errors.paid_amount" />
@@ -253,6 +356,7 @@ const search = async () => {
                                 />
                                 <Input
                                     v-model="formattedChangeAmount"
+                                    :tabindex="searchProducts.length + selectedProducts.length + 6"
                                     type="text"
                                     class="text-right"
                                     readonly
@@ -265,7 +369,7 @@ const search = async () => {
                     <Button
                         type="submit"
                         class="w-full"
-                        :tabindex="3"
+                        :tabindex="searchProducts.length + selectedProducts.length + 7"
                         :disabled="processing"
                     >
                         <LoaderCircle
