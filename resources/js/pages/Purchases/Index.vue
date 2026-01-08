@@ -64,6 +64,12 @@ const quantity = ref<number | null>(null);
 const total = computed(() => {
     return (costPrice.value ?? 0)* (quantity.value ?? 0);
 });
+const formattedTotal = computed(() => {
+    return new Intl.NumberFormat('es-MX', {
+        style: 'currency',
+        currency: 'MXN',
+    }).format(total.value)
+})
 const soldByRetail = ref<boolean>(false);
 const retailUnitsPerBox = ref<number | null>(null);
 const firstWholesalePercentage = ref<number | null>(null);
@@ -226,10 +232,16 @@ const search = async () => {
                                     type="number"
                                     step="0.01"
                                     required
+                                    hidden
                                     readonly
                                     :tabindex="products.length + 3"
                                     name="total"
                                     placeholder="Total de la compra"
+                                />
+                                <Input
+                                    v-model="formattedTotal"
+                                    type="text"
+                                    readonly
                                 />
                                 <InputError :message="errors.total" />
                             </div>
