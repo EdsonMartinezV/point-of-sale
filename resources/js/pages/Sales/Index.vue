@@ -31,6 +31,7 @@ import ProductController from '@/actions/App/Http/Controllers/ProductController'
 import { columns } from '@/components/tables/sales/columns';
 import { useSalesStore } from '@/stores/sales';
 import { Checkbox } from '@/components/ui/checkbox';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 const props = defineProps<{
   sales: Sale[];
@@ -42,7 +43,7 @@ const showMessageAlert = ref<boolean>(false);
 
 /* Search */
 const q = ref<string>('');
-const searchProducts = ref<any[]>([]);
+const searchResultProducts = ref<any[]>([]);
 const loading = ref<boolean>(false);
 const error = ref<string | null>(null);
 
@@ -65,10 +66,7 @@ const changeAmount = computed(() => {
     return total.value - (paidAmount.value ?? 0);
 });
 const formattedChangeAmount = computed(() => {
-    return new Intl.NumberFormat('es-MX', {
-        style: 'currency',
-        currency: 'MXN',
-    }).format(changeAmount.value)
+    return moneyFormat(changeAmount.value)
 })
 
 const handleMainFormFinish = () => {
@@ -77,9 +75,10 @@ const handleMainFormFinish = () => {
 };
 
 const addProduct = (productId: number) => {
-    const exists = selectedProducts.value.find(product => product.id = productId) ? true : false;
-    if (!exists) {
-        const product = searchProducts.value.find(product => product.id = productId);
+    const product = selectedProducts.value.find(product => product.id === productId);
+
+    if (!product ) {
+        const product = searchResultProducts.value.find(product => product.id === productId);
         selectedProducts.value.push(product);
         formSaleItems.value.push({
             quantity: 0,
@@ -88,15 +87,19 @@ const addProduct = (productId: number) => {
             total: 0,
             product_id: productId,
         });
-        searchProducts.value = [];
-        console.log(selectedProducts.value, formSaleItems.value);
-    } else {
-        console.log('no')
+        searchResultProducts.value = [];
     }
 }
 
 const removeProduct = (productId: number) => {
     selectedProducts.value = selectedProducts.value.filter(product => product.id !== productId);
+}
+
+const moneyFormat = (amount: number | undefined) => {
+    return new Intl.NumberFormat('es-MX', {
+        style: 'currency',
+        currency: 'MXN',
+    }).format(amount ?? 0)
 }
 
 salesStore.$subscribe((mutation, state) => {
@@ -128,7 +131,7 @@ const search = async () => {
 
         const json = await res.json();
         // If using a resource collection it may be { data: [...] }
-        searchProducts.value = json.data ?? json;
+        searchResultProducts.value = json.data ?? json;
     } catch (err: any) {
         error.value = err?.message ?? String(err);
     } finally {
@@ -180,24 +183,25 @@ const search = async () => {
                     </Button>
                 </Form>
 
-                <template v-if="searchProducts.length > 0">
+                <template v-if="searchResultProducts.length > 0">
                     <Separator class="my-12"/>
                     <h2 class="font-medium text-lg">Selecciona un producto</h2>
                     <div class="flex flex-col gap-2 w-full">
                         <Button
-                            v-for="(product, index) in searchProducts"
+                            v-for="(product, index) in searchResultProducts"
                             :key="product.id"
-                            @click="addProduct(product.id)"
+                            @click.prevent="addProduct(product.id)"
                             :tabindex="index + 3"
                             variant="outline"
                             class="w-full text-left"
                         >
-                            {{ product.name }} {{ product.id }}
+                            {{ product.name }}
                         </Button>
                     </div>
                 </template>
 
                 <Form
+                    v-if="selectedProducts.length > 0"
                     v-bind="SaleController.store.form()"
                     :reset-on-success="true"
                     :onSuccess="handleMainFormFinish"
@@ -212,64 +216,90 @@ const search = async () => {
                     class="flex flex-col gap-4 w-full mt-4"
                 >
                     <!-- Sale Items -->
-                    <template v-if="selectedProducts.length > 0">
-                        <Separator class="my-12"/>
-                        <h2 class="font-medium text-lg">Productos</h2>
-                        <div class="flex flex-col gap-2 w-full">
-                            <div
-                                v-for="(product, index) in selectedProducts"
-                                :key="product.id"
-                                class="flex gap-4 w-full items-start justify-between border rounded-2xl p-4"
-                            >
-                                <Label class="self-center text-lg w-full">{{ product.name }}</Label>
+                    <Separator class="my-12"/>
+                    <h2 class="font-medium text-lg">Productos</h2>
+                    <div class="flex flex-col gap-2 w-full">
+                        <div
+                            v-for="(product, index) in selectedProducts"
+                            :key="product.id"
+                            class="flex gap-4 w-full items-start justify-between border rounded-2xl p-4"
+                        >
+                            <Label class="self-center text-lg w-2/3">{{ product.name }}</Label>
 
-                                <div class="flex flex-col gap-2 items-center justify-center w-full self-center">
-                                    <Label class="flex items-center justify-center space-x-3">
-                                        <Checkbox v-model="formSaleItems[index].is_retail_sale" :value:boolean="true" :name="`sale_items.${index}.is_retail_sale`" :tabindex="searchProducts.length + index + 3"/>
-                                        <span>Venta al menudeo?</span>
-                                    </Label>
-                                    <InputError :message="errors[`sale_items.${index}.is_retail_sale`]" />
-                                </div>
-
-                                <div class="grid gap-2 w-full">
-                                    <Label :for="`quantity_${index}`">Cantidad</Label>
-                                    <Input
-                                        :id="`quantity_${index}`"
-                                        :model-value="formSaleItems[index].quantity"
-                                        type="number"
-                                        step="1"
-                                        :tabindex="searchProducts.length + index + 3"
-                                        autocomplete="quantity"
-                                        :name="`sale_items.${index}.quantity`"
-                                        :placeholder="formSaleItems[index].is_retail_sale ? `${product.retail_measure_unit}(s)` : `${product.measure_unit}(s)`"
-                                    />
-                                    <InputError :message="errors[`sale_items.${index}.quantity`]" />
-                                </div>
-
-                                <div class="grid gap-2 w-full">
-                                    <Input
-                                        hidden
-                                        :id="`product_id_${index}`"
-                                        :model-value="formSaleItems[index].product_id"
-                                        type="number"
-                                        step="1"
-                                        readonly
-                                        :name="`sale_items.${index}.product_id`"
-                                    />
-                                    <InputError :message="errors[`sale_items.${index}.product_id`]" />
-                                </div>
-
-                                <Button
-                                    @click="removeProduct(product.id)"
-                                    variant="destructive"
-                                    :tabindex="searchProducts.length + index + 3"
-                                    class="self-end"
-                                >
-                                    <XCircle />
-                                </Button>
+                            <div v-if="product.current_price_modification?.sold_by_retail" class="flex flex-col gap-2 items-center justify-center w-full self-center">
+                                <Label class="flex items-center justify-center space-x-3">
+                                    <Checkbox v-model="formSaleItems[index].is_retail_sale" :value:boolean="true" :name="`sale_items.${index}.is_retail_sale`" :tabindex="searchResultProducts.length + index + 3"/>
+                                    <span>Venta al menudeo?</span>
+                                </Label>
+                                <InputError :message="errors[`sale_items.${index}.is_retail_sale`]" />
                             </div>
+                            <!-- Just for aestethic spacing -->
+                            <div v-else class="w-full"></div>
+
+                            <div class="grid gap-2 w-full">
+                                <Label :for="`quantity_${index}`">Cantidad {{ formSaleItems[index].is_retail_sale }}</Label>
+                                <Input
+                                    :id="`quantity_${index}`"
+                                    :model-value="formSaleItems[index].quantity"
+                                    type="number"
+                                    step="1"
+                                    :tabindex="searchResultProducts.length + index + 3"
+                                    autocomplete="quantity"
+                                    :name="`sale_items.${index}.quantity`"
+                                    :placeholder="formSaleItems[index].is_retail_sale ? `${product.retail_measure_unit?.name}(s)` : `${product.measure_unit?.name}(s)`"
+                                />
+                                <InputError :message="errors[`sale_items.${index}.quantity`]" />
+                            </div>
+
+                            <div class="grid gap-2 w-full h-full">
+                                <RadioGroup class="flex gap-2 h-full" :model-value="formSaleItems[index].selected_percentage" :name="`sale_items.${index}.selected_percentage`">
+                                    <div class="flex flex-col items-center h-full space-y-2 border rounded-lg p-2 has-checked:border-2 has-checked:bg-gray-300">
+                                        <Label class="text-center leading-snug">Margen 1<br>{{ moneyFormat(product.first_wholesale_price) }}
+                                            <RadioGroupItem value="first_wholesale_percentage" :tabindex="searchResultProducts.length + index + 3"/>
+                                        </Label>
+                                    </div>
+                                    <div class="flex flex-col items-center h-full space-y-2 border rounded-lg p-2 has-checked:border-2 has-checked:bg-gray-300">
+                                        <Label class="text-center leading-snug">Margen 2<br>{{ moneyFormat(product.second_wholesale_price) }}
+                                            <RadioGroupItem value="second_wholesale_percentage" :tabindex="searchResultProducts.length + index + 3"/>
+                                        </Label>
+                                    </div>
+                                    <div class="flex flex-col items-center h-full space-y-2 border rounded-lg p-2 has-checked:border-2 has-checked:bg-gray-300">
+                                        <Label class="text-center leading-snug">Margen 3<br>{{ moneyFormat(product.third_wholesale_price) }}
+                                            <RadioGroupItem value="third_wholesale_percentage" :tabindex="searchResultProducts.length + index + 3"/>
+                                        </Label>
+                                    </div>
+                                    <div v-if="product.current_price_modification?.sold_by_retail" class="flex flex-col items-center h-full space-y-2 border rounded-lg p-2 has-checked:border-2 has-checked:bg-gray-300">
+                                        <Label class="text-center leading-snug">Margen 3<br>{{ moneyFormat(product.retail_price) }}
+                                            <RadioGroupItem value="retail_percentage" :tabindex="searchResultProducts.length + index + 3"/>
+                                        </Label>
+                                    </div>
+                                </RadioGroup>
+                                <InputError :message="errors[`sale_items.${index}.selected_percentage`]" />
+                            </div>
+
+                            <div class="grid gap-2 w-full">
+                                <Input
+                                    hidden
+                                    :id="`product_id_${index}`"
+                                    :model-value="formSaleItems[index].product_id"
+                                    type="number"
+                                    step="1"
+                                    readonly
+                                    :name="`sale_items.${index}.product_id`"
+                                />
+                                <InputError :message="errors[`sale_items.${index}.product_id`]" />
+                            </div>
+
+                            <Button
+                                @click.prevent="removeProduct(product.id)"
+                                variant="destructive"
+                                :tabindex="searchResultProducts.length + index + 3"
+                                class="self-end"
+                            >
+                                <XCircle />
+                            </Button>
                         </div>
-                    </template>
+                    </div>
 
                     <!-- Summary section -->
                     <Separator class="my-6"/>
@@ -282,7 +312,7 @@ const search = async () => {
                                 :model-value="saleToEdit?.client"
                                 type="text"
                                 autofocus
-                                :tabindex="searchProducts.length + selectedProducts.length + 3"
+                                :tabindex="searchResultProducts.length + selectedProducts.length + 3"
                                 autocomplete="client"
                                 name="client"
                                 placeholder="Nombre del cliente"
@@ -306,7 +336,7 @@ const search = async () => {
                                 />
                                 <Input
                                     v-model="formattedTotal"
-                                    :tabindex="searchProducts.length + selectedProducts.length + 4"
+                                    :tabindex="searchResultProducts.length + selectedProducts.length + 4"
                                     type="text"
                                     class="text-right"
                                     readonly
@@ -335,7 +365,7 @@ const search = async () => {
                                     }"
                                 >
                                     <NumberFieldContent>
-                                        <NumberFieldInput :tabindex="searchProducts.length + selectedProducts.length + 5" class="text-right pr-2.5" />
+                                        <NumberFieldInput :tabindex="searchResultProducts.length + selectedProducts.length + 5" class="text-right pr-2.5" />
                                     </NumberFieldContent>
                                 </NumberField>
                                 <InputError :message="errors.paid_amount" />
@@ -356,7 +386,7 @@ const search = async () => {
                                 />
                                 <Input
                                     v-model="formattedChangeAmount"
-                                    :tabindex="searchProducts.length + selectedProducts.length + 6"
+                                    :tabindex="searchResultProducts.length + selectedProducts.length + 6"
                                     type="text"
                                     class="text-right"
                                     readonly
@@ -369,7 +399,7 @@ const search = async () => {
                     <Button
                         type="submit"
                         class="w-full"
-                        :tabindex="searchProducts.length + selectedProducts.length + 7"
+                        :tabindex="searchResultProducts.length + selectedProducts.length + 7"
                         :disabled="processing"
                     >
                         <LoaderCircle

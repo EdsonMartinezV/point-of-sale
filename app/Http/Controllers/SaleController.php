@@ -15,9 +15,12 @@ use Illuminate\Support\Facades\DB;
 class SaleController extends Controller
 {
     public function index() {
-        $sales = Sale::with([
+        $sales = Sale::orderByDesc('created_at')->with([
             'saleItems' => [
-                'product',
+                'product' => [
+                    'measureUnit',
+                    'retailMeasureUnit'
+                ],
                 'priceModification'
         ]])->get();
         return Inertia::render('Sales/Index', [
