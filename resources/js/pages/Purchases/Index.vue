@@ -41,6 +41,7 @@ import { columns } from '@/components/tables/purchases/columns';
 import { usePurchasesStore } from '@/stores/purchases';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
+import { NumberField, NumberFieldContent, NumberFieldInput } from '@/components/ui/number-field';
 
 const props = defineProps<{
   purchases: Purchase[];
@@ -59,7 +60,7 @@ const selectedProductId = ref<string | number | null>(null);
 const selectedProduct = computed(() => {
     return products.value.find(p => p.id === selectedProductId.value) || null;
 });
-const costPrice = ref<number | null>(null);
+const costPrice = ref<number | null>(0);
 const quantity = ref<number | null>(null);
 const total = computed(() => {
     return (costPrice.value ?? 0)* (quantity.value ?? 0);
@@ -342,17 +343,29 @@ const search = async () => {
                         <div class="flex gap-4 w-full items-start">
                             <div class="grid gap-2 w-full">
                                 <Label for="cost_price">Precio de costo<span class="text-red-500">*</span></Label>
-                                <Input
-                                    id="cost_price"
-                                    v-model="costPrice"
-                                    type="number"
-                                    step="0.01"
-                                    required
-                                    :tabindex="products.length + 8"
-                                    autocomplete="cost_price"
-                                    name="purchase_items.0.cost_price"
-                                    placeholder="$"
-                                />
+                                <NumberField
+                                    class="gap-2 text-right"
+                                    :min="0"
+                                    :format-options="{
+                                        style: 'currency',
+                                        currency: 'MXN',
+                                        currencyDisplay: 'narrowSymbol',
+                                        currencySign: 'accounting',
+                                    }"
+                                    :model-value="costPrice"
+                                    @update:model-value="(v) => {
+                                        if (v) {
+                                            costPrice = v
+                                        }
+                                        else {
+                                            costPrice = null
+                                        }
+                                    }"
+                                >
+                                    <NumberFieldContent>
+                                        <NumberFieldInput :tabindex="products.length + 8" class="text-right pr-2.5" />
+                                    </NumberFieldContent>
+                                </NumberField>
                                 <InputError :message="errors['purchase_items.0.cost_price']" />
                             </div>
 
