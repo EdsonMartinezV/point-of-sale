@@ -32,7 +32,7 @@ class ProductController extends Controller
     }
 
     public function index() {
-        $products = Product::with(['category', 'measureUnit', 'retailMeasureUnit'])->get();
+        $products = Product::orderByDesc('created_at')->with(['category', 'measureUnit', 'retailMeasureUnit'])->get();
         $categories = Category::all();
         $measureUnits = MeasureUnit::all();
         return Inertia::render('Products/Index', [
@@ -54,10 +54,10 @@ class ProductController extends Controller
 
         $query = Product::query();
         if ($q !== '') {
-            $query = Product::where('name', 'like', "%$q%");
+            $query = Product::with(['measureUnit', 'retailMeasureUnit'])->where('name', 'like', "%$q%");
         }
 
-        $products = $query->limit(50)->get();
+        $products = $query->with(['measureUnit', 'retailMeasureUnit'])->limit(50)->get();
 
         // If request expects JSON (AJAX), return JSON; otherwise render Inertia view
         if ($request->wantsJson() || $request->ajax()) {

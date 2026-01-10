@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\DB;
 class PurchaseController extends Controller
 {
     public function index() {
-        $purchases = Purchase::with([
+        $purchases = Purchase::orderByDesc('created_at')->with([
             'provider',
             'purchaseItems' => [
                 'product',
