@@ -23,10 +23,14 @@ class ProductResource extends JsonResource
             'second_wholesale_percentage' => $this->second_wholesale_percentage,
             'third_wholesale_percentage' => $this->third_wholesale_percentage,
             'retail_percentage' => $this->retail_percentage,
+            'first_wholesale_price' => $this->first_wholesale_price,
+            'second_wholesale_price' => $this->second_wholesale_price,
+            'third_wholesale_price' => $this->third_wholesale_price,
+            'retail_price' => $this->retail_price,
             'category' => new CategoryResource($this->whenLoaded('category')),
             'measure_unit' => new MeasureUnitResource($this->whenLoaded('measureUnit')),
             'retail_measure_unit' => new MeasureUnitResource($this->whenLoaded('retailMeasureUnit')),
-            'current_price_modification' => $this->current_price_modification->id ?? null,
+            'current_price_modification' => $this->current_price_modification ?? null,
         ];
     }
 }

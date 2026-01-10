@@ -31,9 +31,14 @@ export interface Product {
     second_wholesale_percentage?: number;
     third_wholesale_percentage?: number;
     retail_percentage?: number;
+    first_wholesale_price?: number;
+    second_wholesale_price?: number;
+    third_wholesale_price?: number;
+    retail_price?: number;
     category?: Category;
     measure_unit?: MeasureUnit;
     retail_measure_unit?: MeasureUnit;
+    current_price_modification?: PriceModification
 }
 
 export interface PriceModification {

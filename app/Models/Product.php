@@ -32,6 +32,10 @@ class Product extends Model
     protected $appends = [
         'total_retail_remaining_stock',
         'current_price_modification',
+        'first_wholesale_price',
+        'second_wholesale_price',
+        'third_wholesale_price',
+        'retail_price',
     ];
 
     protected function totalRetailRemainingStock(): Attribute{
@@ -43,6 +47,30 @@ class Product extends Model
     protected function currentPriceModification(): Attribute{ 
         return new Attribute(
             get: fn () => $this->priceModifications()->where('is_current', true)->first()
+        );
+    }
+
+    protected function firstWholesalePrice(): Attribute{ 
+        return new Attribute(
+            get: fn () => ($this->first_wholesale_percentage + 1) * $this->cost_price,
+        );
+    }
+
+    protected function secondWholesalePrice(): Attribute{ 
+        return new Attribute(
+            get: fn () => ($this->second_wholesale_percentage + 1) * $this->cost_price,
+        );
+    }
+
+    protected function thirdWholesalePrice(): Attribute{ 
+        return new Attribute(
+            get: fn () => ($this->third_wholesale_percentage + 1) * $this->cost_price,
+        );
+    }
+
+    protected function retailPrice(): Attribute{ 
+        return new Attribute(
+            get: fn () => $this->retail_percentage != null ? ($this->retail_percentage + 1) * ($this->cost_price / $this->retail_units_per_box) : null,
         );
     }
 
