@@ -4,8 +4,8 @@ namespace App;
 
 enum Percentages: string
 {
-    case FIRST_WHOLESOME_PERCENTAGE = 'first_wholesome_percentage';
-    case SECOND_WHOLESOME_PERCENTAGE = 'second_wholesome_percentage';
-    case THIRD_WHOLESOME_PERCENTAGE = 'third_wholesome_percentage';
+    case FIRST_WHOLESALE_PERCENTAGE = 'first_wholesale_percentage';
+    case SECOND_WHOLESALE_PERCENTAGE = 'second_wholesale_percentage';
+    case THIRD_WHOLESALE_PERCENTAGE = 'third_wholesale_percentage';
     case RETAIL_PERCENTAGE = 'retail_percentage';
 }

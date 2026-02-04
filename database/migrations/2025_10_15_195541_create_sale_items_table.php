@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->integer('quantity');
             $table->boolean('is_retail_sale')->default(false);
-            $table->enum('selected_percentage', array_column(Percentages::cases(), 'value'))->default('first_wholesome_percentage');
+            $table->enum('selected_percentage', array_column(Percentages::cases(), 'value'))->default('first_wholesale_percentage');
             $table->decimal('total', 10, 2);
             $table->foreignId('sale_id')
                 ->constrained()
