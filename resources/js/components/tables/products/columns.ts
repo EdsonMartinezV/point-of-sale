@@ -34,6 +34,30 @@ export const columns: ColumnDef<Product>[] = [
     },
   },
   {
+    accessorKey: 'stock',
+    header: ({ column }) => {
+      return h(Button, {
+        variant: 'ghost',
+        onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+      }, () => ['Stock', h(column.getIsSorted() ? (column.getIsSorted() === 'asc' ? ChevronUp : ChevronDown) : ArrowUpDown, { class: 'ml-2 h-4 w-4' })])
+    },
+    cell: ({ row }) => {
+        return h('div', { class: 'text-right font-medium' }, row.getValue('stock'));
+    },
+  },
+  {
+    accessorKey: 'retail_remaining_stock',
+    header: ({ column }) => {
+      return h(Button, {
+        variant: 'ghost',
+        onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+      }, () => ['Unidades sueltas', h(column.getIsSorted() ? (column.getIsSorted() === 'asc' ? ChevronUp : ChevronDown) : ArrowUpDown, { class: 'ml-2 h-4 w-4' })])
+    },
+    cell: ({ row }) => {
+        return h('div', { class: 'text-right font-medium' }, row.getValue('retail_remaining_stock'));
+    },
+  },
+  {
     accessorKey: 'retail_units_per_box',
     header: ({ column }) => {
       return h(Button, {

@@ -16,8 +16,6 @@ class ProductSeeder extends Seeder
         $products = [
             [
                 'name' => 'Maria Gamesa 1/22 rollos/180g',
-                'stock' => 0,
-                'cost_price' => 250.00,
                 'first_wholesale_percentage' => 0.03,
                 'second_wholesale_percentage' => 0.05,
                 'third_wholesale_percentage' => 0.08,
@@ -26,8 +24,6 @@ class ProductSeeder extends Seeder
             ],
             [
                 'name' => 'Crackets 1/20 y 22 rollos/135g',
-                'stock' => 50,
-                'cost_price' => 255.00,
                 'first_wholesale_percentage' => 0.03,
                 'second_wholesale_percentage' => 0.05,
                 'third_wholesale_percentage' => 0.08,
@@ -36,7 +32,6 @@ class ProductSeeder extends Seeder
             ],
             [
                 'name' => 'Marias Cuetara 1/20 rollos/200g',
-                'stock' => 200,
                 'category_id' => 17,
                 'measure_unit_id' => 1,
             ],

@@ -17,6 +17,8 @@ class ProductResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'sold_by_retail' => boolval($this->sold_by_retail),
+            'stock' => $this->stock,
+            'retail_remaining_stock' => $this->retail_remaining_stock,
             'retail_units_per_box' => $this->retail_units_per_box,
             'cost_price' => $this->cost_price,
             'first_wholesale_percentage' => $this->first_wholesale_percentage,
