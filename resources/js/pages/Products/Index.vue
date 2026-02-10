@@ -38,7 +38,7 @@ import ProductController from '@/actions/App/Http/Controllers/ProductController'
 import { columns } from '@/components/tables/products/columns';
 import { useProductsStore } from '@/stores/products';
 import { cn } from '@/lib/utils';
-import { Checkbox } from '@/components/ui/checkbox';
+/* import { Checkbox } from '@/components/ui/checkbox'; */
 
 const props = defineProps<{
   products: Product[],
@@ -114,8 +114,7 @@ productsStore.$subscribe((mutation, state) => {
                             ...data,
                             category_id: selectedCategoryId || null,
                             measure_unit_id: selectedMeasureUnitId || null,
-                            retail_measure_unit_id: soldByRetail ? selectedRetailMeasureUnitId || null : null,
-                            sold_by_retail: soldByRetail ? true : false,
+                            retail_measure_unit_id: selectedRetailMeasureUnitId || null,
                         }
                     }"
                     class="flex flex-col gap-4 w-full mt-4"
@@ -136,13 +135,13 @@ productsStore.$subscribe((mutation, state) => {
                             />
                             <InputError :message="errors.name" />
                         </div>
-                        <div class="flex flex-col gap-2 items-center justify-center w-full self-center">
+                        <!-- <div class="flex flex-col gap-2 items-center justify-center w-full self-center">
                             <Label for="sold_by_retail" class="flex items-center justify-center space-x-3">
                                 <Checkbox v-model="soldByRetail" :value:boolean="true" id="sold_by_retail" name="sold_by_retail" :tabindex="2"/>
                                 <span>Vendido al menudeo</span>
                             </Label>
                             <InputError :message="errors.sold_by_retail" />
-                        </div>
+                        </div> -->
                         <!-- Category combo box -->
                         <div class="grid gap-2 w-full">
                             <Label for="category_id">Categoría<span class="text-red-500">*</span></Label>
@@ -248,7 +247,7 @@ productsStore.$subscribe((mutation, state) => {
                             <InputError :message="errors.measure_unit_id" />
                         </div>
                         <!-- Retail measure unit combo box -->
-                        <div v-if="soldByRetail" class="grid gap-2 w-full">
+                        <div class="grid gap-2 w-full">
                             <Label for="retail_measure_unit_id">Presentación al menudeo<span class="text-red-500">*</span></Label>
                             <Popover v-model:open="openRetailMeasureUnitComboBox">
                                 <PopoverTrigger as-child>
