@@ -98,4 +98,5 @@ export interface Sale {
     change_amount: number;
     created_by: string;
     created_at: string;
+    sale_items: SaleItem[];
 }

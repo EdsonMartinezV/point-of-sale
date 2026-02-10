@@ -22,6 +22,7 @@ class SaleResource extends JsonResource
             'change_amount' => $this->change_amount,
             'created_by' => $this->user->nickname,
             'created_at' => new Carbon($this->created_at)->toDateTimeString('minute'),
+            'sale_items' => SaleItemResource::collection($this->whenLoaded('saleItems')),
         ];
     }
 }
