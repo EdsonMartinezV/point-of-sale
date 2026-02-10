@@ -36,13 +36,13 @@ class SaleController extends Controller
     }
 
     public function store(StoreSaleRequest $request) {
-        dd($request);
         $validated = $request->validated();
         $sale = Sale::create([
             'client' => $validated['client'],
             'total' => $validated['total'],
             'paid_amount' => $validated['paid_amount'],
             'change_amount' => $validated['change_amount'],
+            'user_id' => $request->user()->id,
         ]);
 
         $saleTotal = 0;

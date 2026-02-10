@@ -22,18 +22,23 @@ class HasStock implements DataAwareRule, ValidationRule
      *
      * @param  \Closure(string, ?string=): \Illuminate\Translation\PotentiallyTranslatedString  $fail
      */
-    public function validate(string $attribute, mixed $value, Closure $fail): void{
-        // $data = request()->all();
+    public function validate(string $attribute, mixed $value, Closure $fail): void {
         $index = explode('.', $attribute)[1];
-        $product = Product::find($this->data['sale_items'][$index]['product_id']);
+        $productId = $this->data['sale_items'][$index]['product_id'];
+        $product = Product::find($productId);
+
+        if (!$product) {
+            $fail('El producto no existe.', null);
+            return;
+        }
 
         if ($this->data['sale_items'][$index]['is_retail_sale']) {
             if ($value > $product->total_retail_remaining_stock) {
-                $fail('No hay suficiente stock minorista para este producto.');
+                $fail('No hay suficiente stock minorista para este producto.', null);
             }
         } else {
             if ($value > $product->stock) {
-                $fail('No hay suficientes unidades.');
+                $fail('No hay suficientes unidades.', null);
             }
         }
     }

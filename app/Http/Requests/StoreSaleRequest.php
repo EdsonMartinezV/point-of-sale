@@ -16,7 +16,7 @@ class StoreSaleRequest extends FormRequest
 
     public function rules() {
         return [
-            'client' => ['required', 'string', 'max:255'],
+            'client' => ['nullable', 'string', 'max:255'],
             'total' => ['required', 'numeric', 'min:1'],
             'paid_amount' => ['required', 'numeric', 'min:1'],
             'change_amount' => ['required', 'numeric', 'min:0'],

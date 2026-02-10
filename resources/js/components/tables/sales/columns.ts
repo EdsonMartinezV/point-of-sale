@@ -22,7 +22,7 @@ export const columns: ColumnDef<Sale>[] = [
           currency: 'MXN',
         }).format(total)
 
-        return h('div', { class: 'text-right font-medium' }, formatted)
+        return h('div', { class: 'text-right font-medium mr-10' }, formatted)
     },
   },
   {
@@ -35,7 +35,7 @@ export const columns: ColumnDef<Sale>[] = [
     },
     cell: ({ row }) => {
         /* You can format here */
-        return h('div', { class: 'text-center font-medium' }, row.getValue('created_by'))
+        return h('div', { class: 'text-left font-medium' }, row.getValue('created_by'))
     },
     sortingFn: 'alphanumeric',
   },
@@ -50,7 +50,7 @@ export const columns: ColumnDef<Sale>[] = [
     cell: ({ row }) => {
         /* You can format here */
 
-        return h('div', { class: 'text-center font-medium' }, row.getValue('client') || '—')
+        return h('div', { class: 'text-left font-medium' }, row.getValue('client') || '—')
     },
     sortingFn: 'alphanumeric',
   },
@@ -63,7 +63,7 @@ export const columns: ColumnDef<Sale>[] = [
       }, () => ['Fecha de venta', h(column.getIsSorted() ? (column.getIsSorted() === 'asc' ? ChevronUp : ChevronDown) : ArrowUpDown, { class: 'ml-2 h-4 w-4' })])
     },
     cell: ({ row }) => {
-        return h('div', { class: 'text-right' }, row.getValue('created_at') || '—')
+        return h('div', { class: 'text-left font-medium' }, row.getValue('created_at') || '—')
     },
     sortingFn: 'datetime',
   },
