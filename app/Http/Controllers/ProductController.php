@@ -51,10 +51,14 @@ class ProductController extends Controller
 
     public function search(Request $request) {
         $q = trim((string) $request->query('q'));
+        $available = trim((boolean) $request->query('available'));
 
         $query = Product::query();
         if ($q !== '') {
-            $query = Product::with(['measureUnit', 'retailMeasureUnit'])->where('name', 'like', "%$q%");
+            $query = Product::/* with(['measureUnit', 'retailMeasureUnit'])-> */where('name', 'like', "%$q%");
+        }
+        if ($available) {
+            $query->where('stock', '>', 0);
         }
 
         $products = $query->with(['measureUnit', 'retailMeasureUnit'])->limit(50)->get();
