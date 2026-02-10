@@ -537,7 +537,7 @@ const search = async () => {
                         </Item>
                     </div>
                     <ScrollArea class="w-full max-h-64 flex flex-col gap-2">
-                        <Card v-for="saleItem in saleToShow?.sale_items" :key="saleItem.id" class="flex flex-row w-full mb-2">
+                        <Card v-for="saleItem in saleToShow?.sale_items" :key="saleItem.id" class="flex flex-row justify-between w-full mb-2">
                             <CardHeader class="w-1/2">
                                 <CardTitle>{{ saleItem.product.name }}</CardTitle>
                             </CardHeader>
