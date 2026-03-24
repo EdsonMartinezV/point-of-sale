@@ -38,7 +38,7 @@ class SaleController extends Controller
     public function store(StoreSaleRequest $request) {
         $validated = $request->validated();
         $sale = Sale::create([
-            'client' => $validated['client'],
+            'client' => $validated['client'] ? $validated['client'] : 'Público en general',
             'total' => $validated['total'],
             'paid_amount' => $validated['paid_amount'],
             'change_amount' => $validated['change_amount'],
