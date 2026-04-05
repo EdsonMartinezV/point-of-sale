@@ -199,11 +199,11 @@ const search = async () => {
 
 onUpdated(() => {
     if (props.saleToPrint) {
-        printReceipt();
+        printReceipt(props.saleToPrint);
     }
 });
 
-const printReceipt = async () => {
+const printReceipt = async (sale: Sale | null) => {
     const printActions: PrintActions = {
         header: [
             {
@@ -224,16 +224,20 @@ const printReceipt = async () => {
                 content: '--------------------------------\n'
             },{
                 action: 'text',
-                content: `Total: ${moneyFormat(props.saleToPrint?.total)}\n`
+                content: `Total: ${moneyFormat(sale?.total)}\n`
             },{
                 action: 'text',
-                content: `Paga con: ${moneyFormat(props.saleToPrint?.paid_amount)}\n`
+                content: `Paga con: ${moneyFormat(sale?.paid_amount)}\n`
             },{
                 action: 'text',
-                content: `Cambio: ${moneyFormat(props.saleToPrint?.change_amount)}\n`
+                content: `Cambio: ${moneyFormat(sale?.change_amount)}\n`
             },
         ],
         footer: [
+            {
+                action: 'text',
+                content: `${sale?.client}`,
+            },
             {
                 action: 'text',
                 content: '¡Gracias por su compra!\n',
@@ -241,10 +245,10 @@ const printReceipt = async () => {
         ],
     }
 
-    props.saleToPrint?.sale_items.forEach(item => {
+    sale?.sale_items.forEach(item => {
         const quantity = item.quantity;
         const name = item.product.name.length > 16 ? item.product.name.substring(0, 13) + '...' : item.product.name;
-        const unitPrice = moneyFormat(item.total && item.quantity ? item.total / item.quantity : 0);
+        const unitPrice = moneyFormat(item.total / item.quantity);
         const total = moneyFormat(item.total);
 
         printActions.articles.push({
@@ -272,6 +276,9 @@ const printReceipt = async () => {
         router.visit(SaleController.index());
     } catch (error) {
         console.error('Error printing receipt:', error);
+    } finally {
+        salesStore.clearIdToShow();
+        showSaleAlert.value = false;
     }
 };
 </script>
@@ -583,38 +590,41 @@ const printReceipt = async () => {
 
             <!-- Show sale alert -->
             <AlertDialog v-model:open="showSaleAlert" @close="salesStore.clearIdToShow()">
-                <AlertDialogContent class="w-full max-w-2xl">
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>{{ saleToShow?.created_at }}</AlertDialogTitle>
-                        <AlertDialogDescription>Detalles de la venta</AlertDialogDescription>
+                <AlertDialogContent class="w-full max-w-3xl">
+                    <AlertDialogHeader class="flex flex-row justify-between items-center">
+                        <div>
+                            <AlertDialogTitle>{{ saleToShow?.created_at }}</AlertDialogTitle>
+                            <AlertDialogDescription>Detalles de la venta</AlertDialogDescription>
+                        </div>
+                        <Button @click.prevent="printReceipt(saleToShow)">Imprimir Recibo</Button>
                     </AlertDialogHeader>
 
                     <div class="flex gap-2 w-full">
-                        <Item variant="outline" class="h-fit">
+                        <Item variant="outline" class="w-full">
                             <ItemContent>
                                 <ItemTitle>Cliente:</ItemTitle>
                                 <ItemDescription>{{ saleToShow?.client || '—' }}</ItemDescription>
                             </ItemContent>
                         </Item>
-                        <Item variant="outline" class="h-fit">
+                        <Item variant="outline" class="w-full">
                             <ItemContent>
                                 <ItemTitle>Registrado por:</ItemTitle>
                                 <ItemDescription>{{ saleToShow?.created_by || '—' }}</ItemDescription>
                             </ItemContent>
                         </Item>
-                        <Item variant="outline" class="h-fit">
+                        <Item variant="outline" class="w-full">
                             <ItemContent>
                                 <ItemTitle>Total:</ItemTitle>
                                 <ItemDescription>{{ moneyFormat(saleToShow?.total) }}</ItemDescription>
                             </ItemContent>
                         </Item>
-                        <Item variant="outline" class="h-fit">
+                        <Item variant="outline" class="w-full">
                             <ItemContent>
                                 <ItemTitle>Pagado con:</ItemTitle>
                                 <ItemDescription>{{ moneyFormat(saleToShow?.paid_amount) }}</ItemDescription>
                             </ItemContent>
                         </Item>
-                        <Item variant="outline" class="h-fit">
+                        <Item variant="outline" class="w-full">
                             <ItemContent>
                                 <ItemTitle>Cambio:</ItemTitle>
                                 <ItemDescription>{{ moneyFormat(saleToShow?.change_amount) }}</ItemDescription>
@@ -626,8 +636,9 @@ const printReceipt = async () => {
                             <CardHeader class="w-1/2">
                                 <CardTitle>{{ saleItem.product.name }}</CardTitle>
                             </CardHeader>
-                            <CardContent class="flex gap-2">
-                                <p>{{ saleItem.quantity }} {{ saleItem.is_retail_sale ? saleItem.product.retail_measure_unit?.name + '(s)' : saleItem.product.measure_unit?.name + '(s)' }}</p>
+                            <CardContent class="flex gap-2 w-full justify-end">
+                                <p>{{ saleItem.quantity }} {{ saleItem.is_retail_sale ? saleItem.product.retail_measure_unit?.name + '(s)' : saleItem.product.measure_unit?.name + '(s)' }} x</p>
+                                <p>{{ moneyFormat(saleItem.total / saleItem.quantity) }} =</p>
                                 <p>{{ moneyFormat(saleItem.total) }}</p>
                                 <p>{{ spanishPercentages[saleItem.selected_percentage] }}</p>
                             </CardContent>
