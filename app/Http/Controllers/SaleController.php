@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 
 class SaleController extends Controller
 {
-    public function index() {
+    public function index(Request $request) {
         $sales = Sale::orderByDesc('created_at')->with([
             'saleItems' => [
                 'product' => [
@@ -23,8 +23,21 @@ class SaleController extends Controller
                 ],
                 'priceModification'
         ]])->get();
+        $saleToPrint = null;
+        if ($request->has('sale_to_print')) {
+            $saleToPrint = Sale::with([
+                'saleItems' => [
+                    'product' => [
+                        'measureUnit',
+                        'retailMeasureUnit'
+                    ],
+                    'priceModification'
+                ]
+            ])->find($request->query('sale_to_print'));
+        }
         return Inertia::render('Sales/Index', [
             'sales' => SaleResource::collection($sales),
+            'saleToPrint' => $saleToPrint ? new SaleResource($saleToPrint) : null,
         ]);
     }
 
@@ -169,7 +182,7 @@ class SaleController extends Controller
 
         $sale->update(['total' => $saleTotal]);
 
-        return redirect()->route('sales.index')->with('success', 'Venta creada exitosamente.');
+        return redirect()->route('sales.index', ['sale_to_print' => $sale->id])->with('success', 'Venta creada exitosamente.');
     }
 
     public function update(UpdateSaleRequest $request, $id) {

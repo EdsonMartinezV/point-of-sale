@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Head, Form } from '@inertiajs/vue3';
-import { computed, ref, watch } from 'vue';
+import { Head, Form, router } from '@inertiajs/vue3';
+import { computed, onUpdated, ref, watch } from 'vue';
 
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -25,7 +25,7 @@ import { Separator } from '@/components/ui/separator';
 import InputError from '@/components/InputError.vue';
 import { LoaderCircle, XCircle } from 'lucide-vue-next';
 
-import type { FormSaleItem, Product, Sale } from '@/types/main';
+import type { FormSaleItem, PrintActions, Product, Sale } from '@/types/main';
 import SaleController from '@/actions/App/Http/Controllers/SaleController';
 import ProductController from '@/actions/App/Http/Controllers/ProductController';
 import { columns } from '@/components/tables/sales/columns';
@@ -37,8 +37,11 @@ import { Item, ItemContent, ItemDescription, ItemTitle } from '@/components/ui/i
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import CardHeader from '@/components/ui/card/CardHeader.vue';
 
+const posPrinterApiUrl = import.meta.env.VITE_POS_PRINTER_API_URL;
+
 const props = defineProps<{
   sales: Sale[];
+  saleToPrint: Sale | null;
 }>();
 
 const salesStore = useSalesStore();
@@ -116,6 +119,10 @@ watch(formSaleItems, (newItems) => {
     newItems.forEach((item, index) => {
         const product = selectedProducts.value.find(product => product.id === item.product_id);
         if (product) {
+            if (item.is_retail_sale) {
+                formSaleItems.value[index].selected_percentage = 'retail_percentage';
+            }
+
             let price:number | undefined = 0;
             switch (item.selected_percentage) {
                 case 'first_wholesale_percentage':
@@ -187,6 +194,84 @@ const search = async () => {
         error.value = err?.message ?? String(err);
     } finally {
         loading.value = false;
+    }
+};
+
+onUpdated(() => {
+    if (props.saleToPrint) {
+        printReceipt();
+    }
+});
+
+const printReceipt = async () => {
+    const printActions: PrintActions = {
+        header: [
+            {
+                action: 'text',
+                content: 'Abarrotes MG\n',
+            },{
+                action: 'text',
+                content: `${new Date().toLocaleString()}\n`,
+            },{
+                action: 'text',
+                content: '--------------------------------\n'
+            }
+        ],
+        articles: [],
+        totals: [
+            {
+                action: 'text',
+                content: '--------------------------------\n'
+            },{
+                action: 'text',
+                content: `Total: ${moneyFormat(props.saleToPrint?.total)}\n`
+            },{
+                action: 'text',
+                content: `Paga con: ${moneyFormat(props.saleToPrint?.paid_amount)}\n`
+            },{
+                action: 'text',
+                content: `Cambio: ${moneyFormat(props.saleToPrint?.change_amount)}\n`
+            },
+        ],
+        footer: [
+            {
+                action: 'text',
+                content: '¡Gracias por su compra!\n',
+            }
+        ],
+    }
+
+    props.saleToPrint?.sale_items.forEach(item => {
+        const quantity = item.quantity;
+        const name = item.product.name.length > 16 ? item.product.name.substring(0, 13) + '...' : item.product.name;
+        const unitPrice = moneyFormat(item.total && item.quantity ? item.total / item.quantity : 0);
+        const total = moneyFormat(item.total);
+
+        printActions.articles.push({
+            quantity,
+            name,
+            unitPrice,
+            total
+        });
+    });
+
+    try {
+        const response = await fetch(`${posPrinterApiUrl}/print`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(printActions),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+        console.log('Print response:', await response.json());
+
+        router.visit(SaleController.index());
+    } catch (error) {
+        console.error('Error printing receipt:', error);
     }
 };
 </script>
@@ -319,7 +404,7 @@ const search = async () => {
                                             <RadioGroupItem value="third_wholesale_percentage" :tabindex="searchResultProducts.length + index + 3"/>
                                         </Label>
                                     </div>
-                                    <div v-if="product.current_price_modification?.sold_by_retail" class="flex flex-col items-center w-full h-full space-y-2 border rounded-lg p-2 has-checked:border-2 has-checked:bg-gray-300">
+                                    <div v-if="formSaleItems[index].is_retail_sale" class="flex flex-col items-center w-full h-full space-y-2 border rounded-lg p-2 has-checked:border-2 has-checked:bg-gray-300">
                                         <Label class="text-center leading-snug">Margen menudeo<br>{{ moneyFormat(product.retail_price) }}
                                             <RadioGroupItem value="retail_percentage" :tabindex="searchResultProducts.length + index + 3"/>
                                         </Label>

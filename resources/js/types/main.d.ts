@@ -84,7 +84,7 @@ export interface SaleItem {
 export interface FormSaleItem {
     quantity?: number;
     is_retail_sale?: boolean;
-    selected_percentage?: 'first_wholesale_percentage' | 'second_wholesale_percentage' | 'third_wholesale_percentage' | 'retail_percentage';
+    selected_percentage?: 'first_wholesale_percentage' | 'second_wholesale_percentage' | 'third_wholesale_percentage' | 'retail_percentage' | '';
     total?: number;
     product_id?: number;
     price_modification_id?: number;
@@ -99,4 +99,18 @@ export interface Sale {
     created_by: string;
     created_at: string;
     sale_items: SaleItem[];
+}
+
+export interface PrintArticle {
+    quantity: number;
+    name: string;
+    unitPrice: string;
+    total: string;
+}
+
+export interface PrintActions {
+  header: Array<{action: string; content: string}>;
+  articles: PrintArticle[];
+  totals: Array<{action: string; content: string}>;
+  footer: Array<{action: string; content: string}>;
 }
