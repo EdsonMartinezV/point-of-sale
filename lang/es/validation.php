@@ -65,7 +65,7 @@ return [
     'gte' => [
         'array' => 'El campo :attribute debe tener :value elementos o más.',
         'file' => 'El campo :attribute debe ser mayor o igual que :value kilobytes.',
-        'numeric' => 'El campo :attribute debe ser mayor o igual que :value.',
+        'numeric' => 'Monto insuficiente',
         'string' => 'El campo :attribute debe ser mayor o igual que :value caracteres.',
     ],
     'hex_color' => 'El campo :attribute debe ser un color hexadecimal válido.',

@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Models\Sale;
 use App\Percentages;
 use App\Rules\HasStock;
+use App\Rules\RetailPercentage;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -18,13 +19,13 @@ class StoreSaleRequest extends FormRequest
         return [
             'client' => ['nullable', 'string', 'max:255'],
             'total' => ['required', 'numeric', 'min:1'],
-            'paid_amount' => ['required', 'numeric', 'min:1'],
+            'paid_amount' => ['required', 'numeric', 'min:1', 'gte:total'],
             'change_amount' => ['required', 'numeric', 'min:0'],
             /* SALE ITEMS */
             'sale_items' => ['required', 'array'],
             'sale_items.*.quantity' => ['required', 'integer', 'min:1', new HasStock],
             'sale_items.*.is_retail_sale' => ['required', 'boolean'],
-            'sale_items.*.selected_percentage' => ['required', Rule::enum(Percentages::class)],
+            'sale_items.*.selected_percentage' => ['required', Rule::enum(Percentages::class), new RetailPercentage],
             'sale_items.*.product_id' => ['required', 'exists:products,id'],
             'sale_items.*.price_modification_id' => ['required', 'exists:price_modifications,id'],
         ];
