@@ -192,7 +192,7 @@ const search = async () => {
                     :disabled="false"
                     locale="es-419"
                     currency="USD"
-                    class="max-h-24 overflow-y-auto"
+                    class="max max-h-72 overflow-y-auto"
                 />
 
                 <template v-if="selectedProduct">
@@ -324,7 +324,7 @@ const search = async () => {
                             </div>
 
                             <div class="grid gap-2 w-full">
-                                <Label for="retail_units_per_box">Unidades por caja<span class="text-red-500">*</span></Label>
+                                <Label for="retail_units_per_box">{{ selectedProduct.retail_measure_unit?.name ?`${selectedProduct.retail_measure_unit?.name} (s)` : 'Unidades' }} por {{ selectedProduct.measure_unit.name }}<span class="text-red-500">*</span></Label>
                                 <Input
                                     id="retail_units_per_box"
                                     v-model="retailUnitsPerBox"

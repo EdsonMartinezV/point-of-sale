@@ -34,6 +34,38 @@ export const columns: ColumnDef<Product>[] = [
     },
   },
   {
+    accessorKey: 'measure_unit',
+    header: ({ column }) => {
+      return h(Button, {
+        variant: 'ghost',
+        onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+      }, () => ['Presentación al mayoreo', h(column.getIsSorted() ? (column.getIsSorted() === 'asc' ? ChevronUp : ChevronDown) : ArrowUpDown, { class: 'ml-2 h-4 w-4' })])
+    },
+    cell: ({ row }) => {
+        /* You can format here */
+        const measure_unit:MeasureUnit = row.getValue('measure_unit');
+
+        return h('div', { class: 'text-right font-medium' }, measure_unit?.name)
+    },
+    sortingFn
+  },
+  {
+    accessorKey: 'retail_measure_unit',
+    header: ({ column }) => {
+      return h(Button, {
+        variant: 'ghost',
+        onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+      }, () => ['Presentación al menudeo', h(column.getIsSorted() ? (column.getIsSorted() === 'asc' ? ChevronUp : ChevronDown) : ArrowUpDown, { class: 'ml-2 h-4 w-4' })])
+    },
+    cell: ({ row }) => {
+        /* You can format here */
+        const retail_measure_unit:MeasureUnit = row.getValue('retail_measure_unit');
+
+        return h('div', { class: 'text-right font-medium' }, retail_measure_unit?.name)
+    },
+    sortingFn
+  },
+  {
     accessorKey: 'stock',
     header: ({ column }) => {
       return h(Button, {
@@ -182,38 +214,6 @@ export const columns: ColumnDef<Product>[] = [
         const category:Category = row.getValue('category');
 
         return h('div', { class: 'text-right font-medium' }, category.name);
-    },
-    sortingFn
-  },
-  {
-    accessorKey: 'measure_unit',
-    header: ({ column }) => {
-      return h(Button, {
-        variant: 'ghost',
-        onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-      }, () => ['Presentación al mayoreo', h(column.getIsSorted() ? (column.getIsSorted() === 'asc' ? ChevronUp : ChevronDown) : ArrowUpDown, { class: 'ml-2 h-4 w-4' })])
-    },
-    cell: ({ row }) => {
-        /* You can format here */
-        const measure_unit:MeasureUnit = row.getValue('measure_unit');
-
-        return h('div', { class: 'text-right font-medium' }, measure_unit?.name)
-    },
-    sortingFn
-  },
-  {
-    accessorKey: 'retail_measure_unit',
-    header: ({ column }) => {
-      return h(Button, {
-        variant: 'ghost',
-        onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-      }, () => ['Presentación al menudeo', h(column.getIsSorted() ? (column.getIsSorted() === 'asc' ? ChevronUp : ChevronDown) : ArrowUpDown, { class: 'ml-2 h-4 w-4' })])
-    },
-    cell: ({ row }) => {
-        /* You can format here */
-        const retail_measure_unit:MeasureUnit = row.getValue('retail_measure_unit');
-
-        return h('div', { class: 'text-right font-medium' }, retail_measure_unit?.name)
     },
     sortingFn
   },

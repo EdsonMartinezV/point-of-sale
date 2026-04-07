@@ -394,7 +394,7 @@ const printReceipt = async (sale: Sale | null) => {
                                 <InputError :message="errors[`sale_items.${index}.quantity`]" />
                             </div>
 
-                            <div class="grid gap-2 w-[120rem] h-full self-end">
+                            <div class="grid gap-2 w-[120rem] h-full mt-1">
                                 <RadioGroup class="flex gap-2 w-full h-full" v-model="formSaleItems[index].selected_percentage" :name="`sale_items.${index}.selected_percentage`">
                                     <div class="flex flex-col items-center w-full h-full space-y-2 border rounded-lg p-2 has-checked:border-2 has-checked:bg-gray-300">
                                         <Label class="text-center leading-snug">Margen 1<br>{{ moneyFormat(product.first_wholesale_price) }}
