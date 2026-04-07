@@ -14,78 +14,39 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         $categories = [
-            [
-                'name' => 'lácteos y huevos',
-                'description' => 'productos lácteos y huevos frescos, como leche, queso, yogur y huevos.'
-            ],
-            [
-                'name' => 'cereales y granos',
-                'description' => 'harinas, avena, arroz, quinoa y otros granos y cereales.'
-            ],
-            [
-                'name' => 'frutos secos',
-                'description' => 'almendras, nueces, pistachos y mezclas de frutos secos y semillas.'
-            ],
-            [
-                'name' => 'bebidas',
-                'description' => 'bebidas no alcohólicas: jugos, refrescos, agua y bebidas isotónicas.'
-            ],
-            [
-                'name' => 'enlatados y conservas',
-                'description' => 'alimentos enlatados y en conserva: verduras, sopas, atún y salsas.'
-            ],
-            [
-                'name' => 'salsas y condimentos',
-                'description' => 'salsas, aderezos y condimentos para cocinar y acompañar platos.'
-            ],
-            [
-                'name' => 'aceites y vinagres',
-                'description' => 'aceites vegetales y diferentes tipos de vinagre.'
-            ],
-            [
-                'name' => 'azúcares',
-                'description' => 'azúcar y endulzantes naturales y artificiales.'
-            ],
-            [
-                'name' => 'dulces',
-                'description' => 'golosinas azucaradas.'
-            ],
-            [
-                'name' => 'snacks',
-                'description' => 'frituras.'
-            ],
-            [
-                'name' => 'limpieza del hogar',
-                'description' => 'detergentes, desinfectantes y utensilios para la limpieza del hogar.'
-            ],
-            [
-                'name' => 'higiene personal',
-                'description' => 'productos de cuidado personal: jabón, champú, pasta dental y desodorante.'
-            ],
-            [
-                'name' => 'mascotas',
-                'description' => 'alimentos y accesorios para perros, gatos y otras mascotas.'
-            ],
-            [
-                'name' => 'bebés',
-                'description' => 'productos para bebés: pañales, alimentos infantiles y productos de cuidado.'
-            ],
-            [
-                'name' => 'bebidas alcohólicas',
-                'description' => 'vinos, cervezas y licores destinados al consumo adulto.'
-            ],
-            [
-                'name' => 'especias y hierbas',
-                'description' => 'especias, hierbas secas y mezclas para sazonar todo tipo de platos.'
-            ],
-            [
-                'name' => 'galletas',
-                'description' => 'galletas por caja y paquete.'
-            ]
+            'lácteos, huevos y refrigerados' => 'productos lácteos y huevos frescos, como leche, queso, yogur y huevos.',
+            'cereales y granos' => 'harinas, avena, arroz, quinoa y otros granos y cereales.',
+            'enlatados y conservas' => 'alimentos enlatados y en conserva: verduras, sopas, atún y salsas.',
+            'aceites y vinagres' => 'aceites vegetales y diferentes tipos de vinagre.',
+            'especias y hierbas' => 'especias, hierbas secas y mezclas para sazonar todo tipo de platos.',
+            'galletas y dulces' => 'productos dulces como galletas, chocolates, caramelos y golosinas.',
+            'snacks salados' => 'botanas saladas como papas fritas, frituras y crackers.',
+            'bebidas' => 'bebidas como refrescos, jugos, café y bebidas en polvo.',
+            'abarrotes básicos' => 'productos esenciales de despensa como arroz, azúcar, sal, café y mayonesa.',
+            'condimentos y salsas' => 'salsas, especias, aderezos y productos para sazonar alimentos.',
+            'panadería' => 'pan, bollería y productos de pan dulce o empaquetado.',
+            'cuidado personal' => 'productos de higiene personal como shampoo, jabón, pasta dental y desodorantes.',
+            'bebés' => 'productos para bebés: pañales, alimentos infantiles y productos de cuidado.',
+            'papel y desechables' => 'productos de papel y uso desechable como servilletas, papel higiénico y bolsas.',
+            'limpieza del hogar' => 'productos para la limpieza como detergentes, cloro y limpiadores.',
+            'hogar' => 'utilidades para el hogar.',
+            'encendedores y cerillos' => 'encendedores, cerillos y artículos para encender fuego.',
+            'tabaco' => 'productos de tabaco como cigarros.',
+            'bebidas alcohólicas' => 'vinos, cervezas y licores destinados al consumo adulto.',
+            'mascotas' => 'alimentos y accesorios para perros, gatos y otras mascotas.',
+            'frutos secos' => 'almendras, nueces, pistachos y mezclas de frutos secos y semillas.',
+            'papelería' => 'útiles escolares.',
+            'concentrados y esencias' => 'para preparación de bebidas y alimentos.',
+            'sopas' => 'sopas instantáneas y precocidas.',
+            'farmacia' => 'salud.',
+            'otros' => 'productos varios.',
         ];
 
-        foreach ($categories as $category) {
-            Category::create($category);
+        foreach ($categories as $category => $description) {
+            Category::create([
+                'name' => $category,
+                'description' => $description
+            ]);
         }
     }
 }

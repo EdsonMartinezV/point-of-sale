@@ -14,35 +14,45 @@ class MeasureUnitSeeder extends Seeder
     public function run(): void
     {
         $measureUnits = [
-            ['name' => 'caja', 'abbreviation' => 'cja'],
-            ['name' => 'bulto', 'abbreviation' => 'bul'],
-            ['name' => 'exhibidor', 'abbreviation' => 'exi'],
-            ['name' => 'unidad', 'abbreviation' => 'uni'],
-            ['name' => 'pieza', 'abbreviation' => 'pz'],
-            ['name' => 'paquete', 'abbreviation' => 'paq'],
-            ['name' => 'docena', 'abbreviation' => 'doc'],
-            ['name' => 'botella', 'abbreviation' => 'bot'],
-            ['name' => 'lata', 'abbreviation' => 'lat'],
-            ['name' => 'galón', 'abbreviation' => 'gal'],
-            ['name' => 'sobre', 'abbreviation' => 'sob'],
-            ['name' => 'tarro', 'abbreviation' => 'tar'],
-            ['name' => 'bolsa', 'abbreviation' => 'bol'],
-            ['name' => 'rollo', 'abbreviation' => 'rol'],
-            ['name' => 'tubo', 'abbreviation' => 'tub'],
-            ['name' => 'frasco', 'abbreviation' => 'frs'],
-            ['name' => 'cajón', 'abbreviation' => 'cjn'],
-            ['name' => 'barril', 'abbreviation' => 'brr'],
-            ['name' => 'cubeta', 'abbreviation' => 'cub'],
-            ['name' => 'kilogramo', 'abbreviation' => 'kg'],
-            ['name' => 'gramo', 'abbreviation' => 'g'],
-            ['name' => 'litro', 'abbreviation' => 'l'],
-            ['name' => 'mililitro', 'abbreviation' => 'ml'],
-            ['name' => 'libra', 'abbreviation' => 'lb'],
-            ['name' => 'onza', 'abbreviation' => 'oz'],
+            'caja' => 'cja',
+            'cajetilla' => 'cjt',
+            'bulto' => 'bul',
+            'exhibidor' => 'exi',
+            'unidad' => 'uni',
+            'pieza' => 'pz',
+            'paquete' => 'paq',
+            'docena' => 'doc',
+            'botella' => 'bot',
+            'lata' => 'lat',
+            'galón' => 'gal',
+            'sobre' => 'sob',
+            'tarro' => 'tar',
+            'bolsa' => 'bol',
+            'rollo' => 'rol',
+            'tubo' => 'tub',
+            'frasco' => 'frs',
+            'barril' => 'brr',
+            'cubeta' => 'cub',
+            'kilogramo' => 'kg',
+            'gramo' => 'g',
+            'litro' => 'l',
+            'mililitro' => 'ml',
+            'libra' => 'lb',
+            'onza' => 'oz',
+            'charola' => 'chr',
+            'cono' => 'con',
+            'tira' => 'tra',
+            'vaso' => 'vso',
+            'tazon' => 'tzn',
+            'estuche' => 'est',
+            'six' => 'six',
         ];
 
-        foreach ($measureUnits as $unit) {
-            MeasureUnit::create($unit);
+        foreach ($measureUnits as $name => $abbreviation) {
+            MeasureUnit::create([
+                'name' => $name,
+                'abbreviation' => $abbreviation
+            ]);
         }
     }
 }
