@@ -102,6 +102,13 @@ const handleMainFormFinish = () => {
     products.value = [];
 };
 
+const moneyFormat = (amount: number | undefined) => {
+    return new Intl.NumberFormat('es-MX', {
+        style: 'currency',
+        currency: 'MXN',
+    }).format(amount ?? 0)
+}
+
 purchasesStore.$subscribe((mutation, state) => {
     if (state.idToEdit !== null) {
         const purchase = props.purchases.find(p => p.id === state.idToEdit) || null;
@@ -226,26 +233,73 @@ const search = async () => {
 
                         <div class="flex gap-4 w-full items-start">
                             <div class="grid gap-2 w-full">
-                                <Label for="total">Total<span class="text-red-500">*</span></Label>
-                                <Input
-                                    id="total"
-                                    v-model="total"
-                                    type="number"
-                                    step="0.01"
-                                    required
-                                    hidden
-                                    readonly
-                                    :tabindex="products.length + 3"
-                                    name="total"
-                                    placeholder="Total de la compra"
-                                />
-                                <Input
-                                    v-model="formattedTotal"
-                                    type="text"
-                                    readonly
-                                />
-                                <InputError :message="errors.total" />
+                                <Label for="cost_price">Precio de costo<span class="text-red-500">*</span></Label>
+                                <NumberField
+                                    class="gap-2 text-right"
+                                    :min="0"
+                                    :format-options="{
+                                        style: 'currency',
+                                        currency: 'MXN',
+                                        currencyDisplay: 'narrowSymbol',
+                                        currencySign: 'accounting',
+                                    }"
+                                    :model-value="costPrice"
+                                    @update:model-value="(v) => {
+                                        if (v) {
+                                            costPrice = v
+                                        }
+                                        else {
+                                            costPrice = null
+                                        }
+                                    }"
+                                >
+                                    <NumberFieldContent>
+                                        <NumberFieldInput :tabindex="products.length + 8" class="text-right pr-2.5" />
+                                    </NumberFieldContent>
+                                </NumberField>
+                                <InputError :message="errors['purchase_items.0.cost_price']" />
                             </div>
+
+                            <div class="grid gap-2 w-full">
+                                <Label for="quantity">Cantidad<span class="text-red-500">*</span></Label>
+                                <Input
+                                    id="quantity"
+                                    v-model="quantity"
+                                    type="number"
+                                    step="1"
+                                    required
+                                    :tabindex="products.length + 5"
+                                    autocomplete="quantity"
+                                    name="purchase_items.0.quantity"
+                                    placeholder="Cantidad comprada"
+                                />
+                                <InputError :message="errors['purchase_items.0.quantity']" />
+                            </div>
+
+                            <div class="grid gap-2 w-full">
+                                <Label for="retail_units_per_box">{{ selectedProduct.retail_measure_unit?.name ?`${selectedProduct.retail_measure_unit?.name} (s)` : 'Unidades' }} por {{ selectedProduct.measure_unit.name }}<span class="text-red-500">*</span></Label>
+                                <Input
+                                    id="retail_units_per_box"
+                                    v-model="retailUnitsPerBox"
+                                    type="number"
+                                    step="1"
+                                    required
+                                    :tabindex="products.length + 7"
+                                    autocomplete="retail_units_per_box"
+                                    name="purchase_items.0.retail_units_per_box"
+                                    placeholder="Unidades por caja"
+                                />
+                                <InputError :message="errors['purchase_items.0.retail_units_per_box']" />
+                            </div>
+
+                            <div class="flex flex-col gap-2 items-center justify-center w-full self-center">
+                                <Label for="sold_by_retail" class="flex items-center justify-center space-x-3">
+                                    <Checkbox v-model="soldByRetail" :value:boolean="true" id="sold_by_retail" name="purchase_items.0.sold_by_retail" :tabindex="products.length + 6"/>
+                                    <span>Vendido al menudeo</span>
+                                </Label>
+                                <InputError :message="errors['purchase_items.0.sold_by_retail']" />
+                            </div>
+
                             <!-- Provider combo box -->
                             <div class="grid gap-2 w-full">
                                 <Label for="provider_id">Proveedor<span class="text-red-500">*</span></Label>
@@ -299,78 +353,14 @@ const search = async () => {
                                 <InputError :message="errors.provider_id" />
                             </div>
 
-                            <div class="grid gap-2 w-full">
-                                <Label for="quantity">Cantidad<span class="text-red-500">*</span></Label>
-                                <Input
-                                    id="quantity"
-                                    v-model="quantity"
-                                    type="number"
-                                    step="1"
-                                    required
-                                    :tabindex="products.length + 5"
-                                    autocomplete="quantity"
-                                    name="purchase_items.0.quantity"
-                                    placeholder="Cantidad comprada"
-                                />
-                                <InputError :message="errors['purchase_items.0.quantity']" />
-                            </div>
-
-                            <div class="flex flex-col gap-2 items-center justify-center w-full self-center">
-                                <Label for="sold_by_retail" class="flex items-center justify-center space-x-3">
-                                    <Checkbox v-model="soldByRetail" :value:boolean="true" id="sold_by_retail" name="purchase_items.0.sold_by_retail" :tabindex="products.length + 6"/>
-                                    <span>Vendido al menudeo</span>
-                                </Label>
-                                <InputError :message="errors['purchase_items.0.sold_by_retail']" />
-                            </div>
-
-                            <div class="grid gap-2 w-full">
-                                <Label for="retail_units_per_box">{{ selectedProduct.retail_measure_unit?.name ?`${selectedProduct.retail_measure_unit?.name} (s)` : 'Unidades' }} por {{ selectedProduct.measure_unit.name }}<span class="text-red-500">*</span></Label>
-                                <Input
-                                    id="retail_units_per_box"
-                                    v-model="retailUnitsPerBox"
-                                    type="number"
-                                    step="1"
-                                    required
-                                    :tabindex="products.length + 7"
-                                    autocomplete="retail_units_per_box"
-                                    name="purchase_items.0.retail_units_per_box"
-                                    placeholder="Unidades por caja"
-                                />
-                                <InputError :message="errors['purchase_items.0.retail_units_per_box']" />
-                            </div>
                         </div>
 
                         <div class="flex gap-4 w-full items-start">
                             <div class="grid gap-2 w-full">
-                                <Label for="cost_price">Precio de costo<span class="text-red-500">*</span></Label>
-                                <NumberField
-                                    class="gap-2 text-right"
-                                    :min="0"
-                                    :format-options="{
-                                        style: 'currency',
-                                        currency: 'MXN',
-                                        currencyDisplay: 'narrowSymbol',
-                                        currencySign: 'accounting',
-                                    }"
-                                    :model-value="costPrice"
-                                    @update:model-value="(v) => {
-                                        if (v) {
-                                            costPrice = v
-                                        }
-                                        else {
-                                            costPrice = null
-                                        }
-                                    }"
-                                >
-                                    <NumberFieldContent>
-                                        <NumberFieldInput :tabindex="products.length + 8" class="text-right pr-2.5" />
-                                    </NumberFieldContent>
-                                </NumberField>
-                                <InputError :message="errors['purchase_items.0.cost_price']" />
-                            </div>
-
-                            <div class="grid gap-2 w-full">
-                                <Label for="first_wholesale_percentage">Primer margen de ganancia (%)<span class="text-red-500">*</span></Label>
+                                <Label for="first_wholesale_percentage">
+                                    <span>Primer margen de ganancia (%)<span class="text-red-500">*</span></span>
+                                    <span>{{ moneyFormat((1 + (firstWholesalePercentage ?? 0) / 100) * (costPrice ?? 0)) }}</span>
+                                </Label>
                                 <Input
                                     id="first_wholesale_percentage"
                                     v-model="firstWholesalePercentage"
@@ -386,7 +376,10 @@ const search = async () => {
                             </div>
 
                             <div class="grid gap-2 w-full">
-                                <Label for="second_wholesale_percentage">Segundo margen de ganancia (%)<span class="text-red-500">*</span></Label>
+                                <Label for="second_wholesale_percentage">
+                                    <span>Segundo margen de ganancia (%)<span class="text-red-500">*</span></span>
+                                    <span>{{ moneyFormat((1 + (secondWholesalePercentage ?? 0) / 100) * (costPrice ?? 0)) }}</span>
+                                </Label>
                                 <Input
                                     id="second_wholesale_percentage"
                                     v-model="secondWholesalePercentage"
@@ -402,7 +395,10 @@ const search = async () => {
                             </div>
 
                             <div class="grid gap-2 w-full">
-                                <Label for="third_wholesale_percentage">Tercer margen de ganancia (%)<span class="text-red-500">*</span></Label>
+                                <Label for="third_wholesale_percentage">
+                                    <span>Tercer margen de ganancia (%)<span class="text-red-500">*</span></span>
+                                    <span>{{ moneyFormat((1 + (thirdWholesalePercentage ?? 0) / 100) * (costPrice ?? 0)) }}</span>
+                                </Label>
                                 <Input
                                     id="third_wholesale_percentage"
                                     v-model="thirdWholesalePercentage"
@@ -418,7 +414,10 @@ const search = async () => {
                             </div>
 
                             <div v-if="soldByRetail" class="grid gap-2 w-full">
-                                <Label for="retail_percentage">Margen de ganancia al menudeo (%)<span class="text-red-500">*</span></Label>
+                                <Label for="retail_percentage">
+                                    <span>Margen de ganancia al menudeo (%)<span class="text-red-500">*</span></span>
+                                    <span>{{ moneyFormat((1 + (retailPercentage ?? 0) / 100) * (costPrice ?? 0)) }}</span>
+                                </Label>
                                 <Input
                                     id="retail_percentage"
                                     v-model="retailPercentage"
@@ -431,6 +430,27 @@ const search = async () => {
                                     placeholder="Porcentaje %"
                                 />
                                 <InputError :message="errors['purchase_items.0.retail_percentage']" />
+                            </div>
+                            <div class="grid gap-2 w-full">
+                                <Label for="total">Total<span class="text-red-500">*</span></Label>
+                                <Input
+                                    id="total"
+                                    v-model="total"
+                                    type="number"
+                                    step="0.01"
+                                    required
+                                    hidden
+                                    readonly
+                                    :tabindex="products.length + 3"
+                                    name="total"
+                                    placeholder="Total de la compra"
+                                />
+                                <Input
+                                    v-model="formattedTotal"
+                                    type="text"
+                                    readonly
+                                />
+                                <InputError :message="errors.total" />
                             </div>
                         </div>
 
