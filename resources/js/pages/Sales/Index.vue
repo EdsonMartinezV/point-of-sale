@@ -52,7 +52,6 @@ const showSaleAlert = ref<boolean>(false);
 
 /* Search */
 const q = ref<string>('');
-const searchInput = ref<typeof Input | null>(null);
 const searchResultProducts = ref<any[]>([]);
 const loading = ref<boolean>(false);
 const error = ref<string | null>(null);
@@ -98,8 +97,8 @@ const addProduct = (productId: number) => {
 
     if (!product ) {
         const product = searchResultProducts.value.find(product => product.id === productId);
-        selectedProducts.value.push(product);
-        formSaleItems.value.push({
+        selectedProducts.value.unshift(product);
+        formSaleItems.value.unshift({
             quantity: 0,
             is_retail_sale: false,
             selected_percentage: 'first_wholesale_percentage',
@@ -198,9 +197,18 @@ const search = async () => {
     }
 };
 
+const searchInput = ref<typeof Input | null>(null);
+
 onMounted(async () => {
     await nextTick();
     searchInput.value?.inputElement?.focus();
+
+    window.addEventListener('keydown', (event: KeyboardEvent) => {
+        if (event.key === 'F8') {
+            event.preventDefault();
+            searchInput.value?.inputElement?.focus();
+        }
+    })
 });
 
 onUpdated(async () => {
@@ -348,7 +356,7 @@ const printReceipt = async (sale: Sale | null) => {
                             @click.prevent="addProduct(product.id)"
                             :tabindex="index + 3"
                             variant="outline"
-                            class="w-full text-left"
+                            class="w-full text-left product-buttons"
                         >
                             {{ product.name }}
                         </Button>
@@ -479,7 +487,6 @@ const printReceipt = async (sale: Sale | null) => {
                                 id="client"
                                 :model-value="saleToEdit?.client"
                                 type="text"
-                                autofocus
                                 :tabindex="searchResultProducts.length + selectedProducts.length + 3"
                                 autocomplete="client"
                                 name="client"
