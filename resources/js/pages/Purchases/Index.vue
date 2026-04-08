@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, Form } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
+import { computed, onMounted, onUpdated, ref, nextTick } from 'vue';
 
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -145,6 +145,21 @@ const search = async () => {
         loading.value = false;
     }
 };
+
+const searchInput = ref<typeof Input | null>(null);
+
+onMounted(async () => {
+    await nextTick();
+    searchInput.value?.inputElement?.focus();
+});
+
+onUpdated(async () => {
+    // Re-focus on any updates to handle Inertia navigation
+    await nextTick();
+    if (!selectedProductId.value) {
+        searchInput.value?.inputElement?.focus();
+    }
+});
 </script>
 
 <template>
@@ -162,12 +177,12 @@ const search = async () => {
                     <div class="grid gap-2 w-full">
                         <Label for="q">Buscar producto</Label>
                         <Input
+                            ref="searchInput"
                             id="q"
                             type="string"
                             name="q"
                             v-model="q"
                             required
-                            autofocus
                             :tabindex="1"
                             autocomplete="q"
                             placeholder="Nombre"

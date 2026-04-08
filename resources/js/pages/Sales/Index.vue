@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, Form, router } from '@inertiajs/vue3';
-import { computed, onUpdated, ref, watch } from 'vue';
+import { computed, onMounted, onUpdated, ref, watch, nextTick } from 'vue';
 
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -52,6 +52,7 @@ const showSaleAlert = ref<boolean>(false);
 
 /* Search */
 const q = ref<string>('');
+const searchInput = ref<typeof Input | null>(null);
 const searchResultProducts = ref<any[]>([]);
 const loading = ref<boolean>(false);
 const error = ref<string | null>(null);
@@ -197,7 +198,18 @@ const search = async () => {
     }
 };
 
-onUpdated(() => {
+onMounted(async () => {
+    await nextTick();
+    searchInput.value?.inputElement?.focus();
+});
+
+onUpdated(async () => {
+    // Re-focus on any updates to handle Inertia navigation
+    await nextTick();
+    if (!selectedProducts.value.length) {
+        searchInput.value?.inputElement?.focus();
+    }
+
     if (props.saleToPrint) {
         printReceipt(props.saleToPrint);
     }
@@ -299,12 +311,12 @@ const printReceipt = async (sale: Sale | null) => {
                     <div class="grid gap-2 w-full">
                         <Label for="q">Buscar producto</Label>
                         <Input
+                            ref="searchInput"
                             id="q"
                             type="string"
                             name="q"
                             v-model="q"
                             required
-                            autofocus
                             :tabindex="1"
                             autocomplete="q"
                             placeholder="Nombre"

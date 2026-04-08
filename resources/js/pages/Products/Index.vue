@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, Form } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { nextTick, onMounted, onUpdated, ref } from 'vue';
 
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -94,6 +94,19 @@ productsStore.$subscribe((mutation, state) => {
         showDestroyAlert.value = false;
     }
 });
+
+const nameInput = ref<typeof Input | null>(null);
+
+onMounted(async () => {
+    await nextTick();
+    nameInput.value?.inputElement?.focus();
+});
+
+onUpdated(async () => {
+    // Re-focus on any updates to handle Inertia navigation
+    await nextTick();
+    nameInput.value?.inputElement?.focus();
+});
 </script>
 
 <template>
@@ -123,11 +136,11 @@ productsStore.$subscribe((mutation, state) => {
                         <div class="grid gap-2 w-full">
                             <Label for="name">Nombre<span class="text-red-500">*</span></Label>
                             <Input
+                                ref="nameInput"
                                 id="name"
                                 :model-value="productToEdit?.name"
                                 type="text"
                                 required
-                                autofocus
                                 :tabindex="1"
                                 autocomplete="name"
                                 name="name"

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, Form } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { onMounted, onUpdated, ref } from 'vue';
 
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -24,6 +24,7 @@ import type { Category } from '@/types/main';
 import CategoryController from '@/actions/App/Http/Controllers/CategoryController';
 import { columns } from '@/components/tables/categories/columns';
 import { useCategoriesStore } from '@/stores/categories';
+import { nextTick } from 'vue';
 
 const props = defineProps<{
   categories: Category[];
@@ -58,6 +59,19 @@ categoriesStore.$subscribe((mutation, state) => {
         showDestroyAlert.value = false;
     }
 });
+
+const nameInput = ref<typeof Input | null>(null);
+
+onMounted(async () => {
+    await nextTick();
+    nameInput.value?.inputElement?.focus();
+});
+
+onUpdated(async () => {
+    // Re-focus on any updates to handle Inertia navigation
+    await nextTick();
+    nameInput.value?.inputElement?.focus();
+});
 </script>
 
 <template>
@@ -79,11 +93,11 @@ categoriesStore.$subscribe((mutation, state) => {
                         <div class="grid gap-2 w-full">
                             <Label for="name">Nombre<span class="text-red-500">*</span></Label>
                             <Input
+                                ref="nameInput"
                                 id="name"
                                 :model-value="categoryToEdit?.name"
                                 type="text"
                                 required
-                                autofocus
                                 :tabindex="1"
                                 autocomplete="name"
                                 name="name"
