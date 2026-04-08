@@ -269,7 +269,7 @@ onUpdated(async () => {
                                     }"
                                 >
                                     <NumberFieldContent>
-                                        <NumberFieldInput :tabindex="products.length + 8" class="text-right pr-2.5" />
+                                        <NumberFieldInput :tabindex="products.length + 4" class="text-right pr-2.5" />
                                     </NumberFieldContent>
                                 </NumberField>
                                 <InputError :message="errors['purchase_items.0.cost_price']" />
@@ -299,17 +299,17 @@ onUpdated(async () => {
                                     type="number"
                                     step="1"
                                     required
-                                    :tabindex="products.length + 7"
+                                    :tabindex="products.length + 6"
                                     autocomplete="retail_units_per_box"
                                     name="purchase_items.0.retail_units_per_box"
-                                    placeholder="Unidades por caja"
+                                    :placeholder="(selectedProduct.retail_measure_unit?.name ? `${selectedProduct.retail_measure_unit?.name} (s)` : 'Unidades') + ` por ${selectedProduct.measure_unit.name}`"
                                 />
                                 <InputError :message="errors['purchase_items.0.retail_units_per_box']" />
                             </div>
 
                             <div class="flex flex-col gap-2 items-center justify-center w-full self-center">
                                 <Label for="sold_by_retail" class="flex items-center justify-center space-x-3">
-                                    <Checkbox v-model="soldByRetail" :value:boolean="true" id="sold_by_retail" name="purchase_items.0.sold_by_retail" :tabindex="products.length + 6"/>
+                                    <Checkbox v-model="soldByRetail" :value:boolean="true" id="sold_by_retail" name="purchase_items.0.sold_by_retail" :tabindex="products.length + 7"/>
                                     <span>Vendido al menudeo</span>
                                 </Label>
                                 <InputError :message="errors['purchase_items.0.sold_by_retail']" />
@@ -326,7 +326,7 @@ onUpdated(async () => {
                                         role="combobox"
                                         :aria-expanded="openProviderComboBox"
                                         class="w-[200px] justify-between"
-                                        :tabindex="products.length + 4"
+                                        :tabindex="products.length + 8"
                                         name="provider_id"
                                     >
                                         {{
@@ -439,7 +439,7 @@ onUpdated(async () => {
                                     type="number"
                                     step="1"
                                     required
-                                    :tabindex="products.length + 11"
+                                    :tabindex="products.length + 12"
                                     autocomplete="retail_percentage"
                                     name="purchase_items.0.retail_percentage"
                                     placeholder="Porcentaje %"
@@ -456,7 +456,6 @@ onUpdated(async () => {
                                     required
                                     hidden
                                     readonly
-                                    :tabindex="products.length + 3"
                                     name="total"
                                     placeholder="Total de la compra"
                                 />
