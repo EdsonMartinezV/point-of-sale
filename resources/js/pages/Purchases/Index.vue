@@ -139,6 +139,7 @@ const search = async () => {
         const json = await res.json();
         // If using a resource collection it may be { data: [...] }
         products.value = json.data ?? json;
+        selectedProductId.value = products.value.length > 0 ? products.value[0].id : null;
     } catch (err: any) {
         error.value = err?.message ?? String(err);
     } finally {
@@ -146,19 +147,40 @@ const search = async () => {
     }
 };
 
+/* Key listeners */
 const searchInput = ref<typeof Input | null>(null);
+const quantityInput = ref<typeof Input | null>(null);
+
+const handleEnterOnProductRadioList = (event: KeyboardEvent) => {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        quantityInput.value?.inputElement?.focus();
+    }
+}
 
 onMounted(async () => {
     await nextTick();
     searchInput.value?.inputElement?.focus();
+
+    window.addEventListener('keydown', (event: KeyboardEvent) => {
+        if (event.key === 'F8') {
+            event.preventDefault();
+            searchInput.value?.inputElement?.focus();
+        }
+    })
+
+    window.addEventListener('keydown', (event: KeyboardEvent) => {
+        if (event.key === 'F9') {
+            event.preventDefault();
+            quantityInput.value?.inputElement?.focus();
+        }
+    })
 });
 
 onUpdated(async () => {
     // Re-focus on any updates to handle Inertia navigation
     await nextTick();
-    if (!selectedProductId.value) {
-        searchInput.value?.inputElement?.focus();
-    }
+    searchInput.value?.inputElement?.focus();
 });
 </script>
 
@@ -192,7 +214,6 @@ onUpdated(async () => {
                     <Button
                         type="submit"
                         class="mt-4"
-                        :tabindex="2"
                         :disabled="loading"
                         @click.prevent="search"
                     >
@@ -205,6 +226,8 @@ onUpdated(async () => {
                 </Form>
 
                 <ProductRadioList
+                    ref="productRadioList"
+                    @keydown.enter="handleEnterOnProductRadioList"
                     v-if="products.length > 0"
                     :products="products"
                     v-model="selectedProductId"
@@ -248,6 +271,23 @@ onUpdated(async () => {
 
                         <div class="flex gap-4 w-full items-start">
                             <div class="grid gap-2 w-full">
+                                <Label for="quantity">Cantidad<span class="text-red-500">*</span></Label>
+                                <Input
+                                    ref="quantityInput"
+                                    id="quantity"
+                                    v-model="quantity"
+                                    type="number"
+                                    step="1"
+                                    required
+                                    :tabindex="products.length + 4"
+                                    autocomplete="quantity"
+                                    name="purchase_items.0.quantity"
+                                    placeholder="Cantidad comprada"
+                                />
+                                <InputError :message="errors['purchase_items.0.quantity']" />
+                            </div>
+
+                            <div class="grid gap-2 w-full">
                                 <Label for="cost_price">Precio de costo<span class="text-red-500">*</span></Label>
                                 <NumberField
                                     class="gap-2 text-right"
@@ -269,26 +309,10 @@ onUpdated(async () => {
                                     }"
                                 >
                                     <NumberFieldContent>
-                                        <NumberFieldInput :tabindex="products.length + 4" class="text-right pr-2.5" />
+                                        <NumberFieldInput :tabindex="products.length + 5" class="text-right pr-2.5" />
                                     </NumberFieldContent>
                                 </NumberField>
                                 <InputError :message="errors['purchase_items.0.cost_price']" />
-                            </div>
-
-                            <div class="grid gap-2 w-full">
-                                <Label for="quantity">Cantidad<span class="text-red-500">*</span></Label>
-                                <Input
-                                    id="quantity"
-                                    v-model="quantity"
-                                    type="number"
-                                    step="1"
-                                    required
-                                    :tabindex="products.length + 5"
-                                    autocomplete="quantity"
-                                    name="purchase_items.0.quantity"
-                                    placeholder="Cantidad comprada"
-                                />
-                                <InputError :message="errors['purchase_items.0.quantity']" />
                             </div>
 
                             <div class="grid gap-2 w-full">

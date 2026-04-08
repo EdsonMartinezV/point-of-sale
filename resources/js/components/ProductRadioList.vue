@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { onMounted } from 'vue';
+
 
 interface Product {
   id: string | number;
@@ -41,13 +43,26 @@ function formatPrice(value: any) {
     console.log('Error formatting price:', e);
     return n.toFixed(2);
   }
-}
+};
+
+
+onMounted(() => {
+  const radios = document.querySelectorAll('input[type="radio"]') as NodeListOf<HTMLInputElement>;
+
+  if (model.value !== null) {
+    radios.forEach((radio) => {
+      if (radio.value === String(model.value)) {
+        radio.focus();
+      }
+    })
+  }
+})
 </script>
 
 <template>
   <ul role="radiogroup" class="space-y-2">
     <li v-for="(p, index) in products" :key="`${p[valueKey]}-${index}`">
-      <label class="group flex items-center justify-between w-full cursor-pointer rounded-md border px-3 py-2 transition-colors duration-150 has-checked:border-indigo-500 has-checked:bg-indigo-50">
+      <label class="group flex items-center justify-between w-full cursor-pointer rounded-md border px-3 py-2 transition-colors duration-150 has-checked:border-indigo-500 has-checked:bg-indigo-50 has-focus:border-gray-500 has-focus:bg-gray-100">
         <div class="flex items-center gap-3">
           <div class="text-left">
             <div class="text-sm font-medium text-gray-900">{{ p[labelKey] }}</div>
@@ -59,7 +74,7 @@ function formatPrice(value: any) {
           <div v-if="showPrice && p.price !== undefined" class="text-sm text-gray-700">{{ formatPrice(p.price) }}</div>
 
           <input
-            :autofocus="index === 1"
+            :ref="`radio-${index}`"
             :tabindex="index + 2"
             type="radio"
             :value="p[valueKey]"
