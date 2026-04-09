@@ -231,6 +231,12 @@ onMounted(async () => {
             showDeleteModal.value = !showDeleteModal.value;
         }
     })
+
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && showSaleAlert.value) {
+            handleEscapeOnSaleAlert()
+        }
+    })
 });
 
 onUpdated(async () => {
@@ -360,6 +366,13 @@ const printReceipt = async (sale: Sale | null) => {
         showSaleAlert.value = false;
     }
 };
+
+const handleEscapeOnSaleAlert = async () => {
+    salesStore.clearIdToShow();
+    showSaleAlert.value = false;
+    await nextTick();
+    searchInput.value?.inputElement?.focus();
+}
 </script>
 
 <template>
@@ -710,16 +723,15 @@ const printReceipt = async (sale: Sale | null) => {
             </AlertDialog>
 
             <!-- Show sale alert -->
-            <AlertDialog v-model:open="showSaleAlert" @close="salesStore.clearIdToShow()">
+            <AlertDialog v-model:open="showSaleAlert">
                 <AlertDialogContent class="w-full max-w-3xl">
                     <AlertDialogHeader class="flex flex-row justify-between items-center">
                         <div>
                             <AlertDialogTitle>{{ saleToShow?.created_at }}</AlertDialogTitle>
                             <AlertDialogDescription>Detalles de la venta</AlertDialogDescription>
                         </div>
-                        <Button @click.prevent="printReceipt(saleToShow)">Imprimir Recibo</Button>
+                        <Button @click.prevent="printReceipt(saleToShow)" :tabindex="searchResultProducts.length + selectedProducts.length + 8">Imprimir Recibo</Button>
                     </AlertDialogHeader>
-
                     <div class="flex gap-2 w-full">
                         <Item variant="outline" class="w-full">
                             <ItemContent>
@@ -767,7 +779,7 @@ const printReceipt = async (sale: Sale | null) => {
                     </ScrollArea>
                     <AlertDialogFooter class="items-center">
                         <p class="text-xl mr-4">Total: {{ moneyFormat(saleToShow?.total) }}</p>
-                        <AlertDialogAction @click="salesStore.clearIdToShow()">
+                        <AlertDialogAction @click="handleEscapeOnSaleAlert" :tabindex="searchResultProducts.length + selectedProducts.length + 9">
                             Cerrar
                         </AlertDialogAction>
                     </AlertDialogFooter>
