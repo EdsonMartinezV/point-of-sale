@@ -36,6 +36,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Item, ItemContent, ItemDescription, ItemTitle } from '@/components/ui/item';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import CardHeader from '@/components/ui/card/CardHeader.vue';
+import ProductRadioList from '@/components/ProductRadioList.vue';
 
 const posPrinterApiUrl = import.meta.env.VITE_POS_PRINTER_API_URL;
 
@@ -223,6 +224,18 @@ onUpdated(async () => {
     }
 });
 
+const selectedProductId = ref<string | number | null>(null);
+
+watch(selectedProductId, (newId) => {
+    addProduct(Number(newId));
+})
+
+const handleEnterOnProductRadioList = (event: KeyboardEvent) => {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+    }
+}
+
 const printReceipt = async (sale: Sale | null) => {
     const printActions: PrintActions = {
         header: [
@@ -349,7 +362,7 @@ const printReceipt = async (sale: Sale | null) => {
                 <template v-if="searchResultProducts.length > 0">
                     <Separator class="my-12"/>
                     <h2 class="font-medium text-lg">Selecciona un producto</h2>
-                    <div class="flex flex-col gap-2 w-full">
+                    <!-- <div class="flex flex-col gap-2 w-full">
                         <Button
                             v-for="(product, index) in searchResultProducts"
                             :key="product.id"
@@ -360,7 +373,23 @@ const printReceipt = async (sale: Sale | null) => {
                         >
                             {{ product.name }}
                         </Button>
-                    </div>
+                    </div> -->
+
+                    <ProductRadioList
+                        ref="productRadioList"
+                        @keydown.enter="handleEnterOnProductRadioList"
+                        v-if="searchResultProducts.length > 0"
+                        :products="searchResultProducts"
+                        v-model="selectedProductId"
+                        value-key="id"
+                        label-key="name"
+                        show-price
+                        :disabled="false"
+                        from-sales-page
+                        locale="es-419"
+                        currency="USD"
+                        class="max max-h-72 overflow-y-auto"
+                    />
                 </template>
 
                 <Form
@@ -381,7 +410,7 @@ const printReceipt = async (sale: Sale | null) => {
                     <!-- Sale Items -->
                     <Separator class="my-6"/>
                     <h2 class="font-medium text-lg">Productos</h2>
-                    <div class="flex flex-col gap-2 w-full">
+                    <div class="flex flex-col gap-2 w-full" @keydown.enter.prevent>
                         <div
                             v-for="(product, index) in selectedProducts"
                             :key="product.id"
