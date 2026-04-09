@@ -84,6 +84,8 @@ const handleMainFormFinish = () => {
     showMessageAlert.value = true;
     selectedProducts.value = [];
     formSaleItems.value = [];
+    paidAmount.value = 0;
+    searchInput.value?.inputElement?.focus();
 };
 
 const spanishPercentages: Record<string, string> = {
@@ -100,7 +102,7 @@ const addProduct = (productId: number) => {
         const product = searchResultProducts.value.find(product => product.id === productId);
         selectedProducts.value.unshift(product);
         formSaleItems.value.unshift({
-            quantity: 0,
+            quantity: null,
             is_retail_sale: false,
             selected_percentage: 'first_wholesale_percentage',
             total: 0,
@@ -199,6 +201,7 @@ const search = async () => {
 };
 
 const searchInput = ref<typeof Input | null>(null);
+const clientInput = ref<typeof Input | null>(null);
 
 onMounted(async () => {
     await nextTick();
@@ -208,6 +211,14 @@ onMounted(async () => {
         if (event.key === 'F8') {
             event.preventDefault();
             searchInput.value?.inputElement?.focus();
+            q.value = '';
+        }
+    })
+
+    window.addEventListener('keydown', (event: KeyboardEvent) => {
+        if (event.key === 'F9') {
+            event.preventDefault();
+            clientInput.value?.inputElement?.focus();
         }
     })
 });
@@ -215,7 +226,7 @@ onMounted(async () => {
 onUpdated(async () => {
     // Re-focus on any updates to handle Inertia navigation
     await nextTick();
-    if (!selectedProducts.value.length) {
+    if (formSaleItems.value.length === 0) {
         searchInput.value?.inputElement?.focus();
     }
 
@@ -227,12 +238,18 @@ onUpdated(async () => {
 const selectedProductId = ref<string | number | null>(null);
 
 watch(selectedProductId, (newId) => {
-    addProduct(Number(newId));
+    if (newId) {
+        addProduct(Number(newId));
+    };
+    selectedProductId.value = null;
 })
 
 const handleEnterOnProductRadioList = (event: KeyboardEvent) => {
     if (event.key === 'Enter') {
         event.preventDefault();
+
+        const quantityInputs = document.querySelectorAll('.quantity-input') as NodeListOf<HTMLInputElement>;
+        quantityInputs[0]?.focus();
     }
 }
 
@@ -360,7 +377,7 @@ const printReceipt = async (sale: Sale | null) => {
                 </Form>
 
                 <template v-if="searchResultProducts.length > 0">
-                    <Separator class="my-12"/>
+                    <Separator class="mt-8 mb-6"/>
                     <h2 class="font-medium text-lg">Selecciona un producto</h2>
                     <!-- <div class="flex flex-col gap-2 w-full">
                         <Button
@@ -435,10 +452,11 @@ const printReceipt = async (sale: Sale | null) => {
                                     v-model="formSaleItems[index].quantity"
                                     type="number"
                                     step="1"
-                                    :tabindex="searchResultProducts.length + index + 3"
+                                    :tabindex="searchResultProducts.length + index + 2"
                                     autocomplete="quantity"
                                     :name="`sale_items.${index}.quantity`"
                                     :placeholder="formSaleItems[index].is_retail_sale ? `${product.retail_measure_unit?.name}(s)` : `${product.measure_unit?.name}(s)`"
+                                    class="quantity-input"
                                 />
                                 <InputError :message="errors[`sale_items.${index}.quantity`]" />
                             </div>
@@ -509,10 +527,11 @@ const printReceipt = async (sale: Sale | null) => {
                     <!-- Summary section -->
                     <Separator class="my-4"/>
                     <h2 class="font-medium text-lg">Resumen</h2>
-                    <div class="flex gap-4 w-full items-start">
+                    <div class="flex gap-4 w-full items-start" @keydown.enter.prevent>
                         <div class="grid gap-2 w-full">
                             <Label for="client">Cliente</Label>
                             <Input
+                                ref="clientInput"
                                 id="client"
                                 :model-value="saleToEdit?.client"
                                 type="text"
