@@ -21,6 +21,7 @@ const props = defineProps<{
   currency?: string;
   disabled?: boolean;
   fromSalesPage?: boolean;
+  selectedProductsIds?: number[];
 }>();
 
 const model = defineModel<string | number | null>('modelValue', {
@@ -41,7 +42,8 @@ const moneyFormat = (amount: number | undefined) => {
 }
 
 const handleSelectFromSales = (event: KeyboardEvent, value: string | number) => {
-  if (event.key === 'Enter') {
+  console.log({ props: props.selectedProductsIds, value });
+  if (event.key === 'Enter' && !props.selectedProductsIds?.includes(Number(value))) {
     model.value = value;
   }
 };
@@ -49,7 +51,6 @@ const handleSelectFromSales = (event: KeyboardEvent, value: string | number) => 
 onMounted(() => {
   const radios = document.querySelectorAll('input[type="radio"]') as NodeListOf<HTMLInputElement>;
 
-  /* TO DO: set focus on first radio when fromSalesPage is true */
   if (model.value !== null) {
     radios.forEach((radio) => {
       if (radio.value === String(model.value)) {

@@ -50,6 +50,7 @@ const saleToEdit = ref<Sale | null>(null);
 const saleToShow = ref<Sale | null>(null);
 const showMessageAlert = ref<boolean>(false);
 const showSaleAlert = ref<boolean>(false);
+const showDeleteModal = ref<boolean>(false);
 
 /* Search */
 const q = ref<string>('');
@@ -116,6 +117,7 @@ const addProduct = (productId: number) => {
 const removeProduct = (productId: number) => {
     selectedProducts.value = selectedProducts.value.filter(product => product.id !== productId);
     formSaleItems.value = formSaleItems.value.filter(item => item.product_id !== productId);
+    productToDeleteId.value = null;
 }
 
 watch(formSaleItems, (newItems) => {
@@ -197,9 +199,11 @@ const search = async () => {
         error.value = err?.message ?? String(err);
     } finally {
         loading.value = false;
+        q.value = '';
     }
 };
 
+/* BUTTONS NAVIGATION */
 const searchInput = ref<typeof Input | null>(null);
 const clientInput = ref<typeof Input | null>(null);
 
@@ -211,7 +215,6 @@ onMounted(async () => {
         if (event.key === 'F8') {
             event.preventDefault();
             searchInput.value?.inputElement?.focus();
-            q.value = '';
         }
     })
 
@@ -219,6 +222,13 @@ onMounted(async () => {
         if (event.key === 'F9') {
             event.preventDefault();
             clientInput.value?.inputElement?.focus();
+        }
+    })
+
+    window.addEventListener('keydown', (event: KeyboardEvent) => {
+        if (event.key === 'F10' && formSaleItems.value.length > 0) {
+            event.preventDefault();
+            showDeleteModal.value = !showDeleteModal.value;
         }
     })
 });
@@ -241,17 +251,36 @@ watch(selectedProductId, (newId) => {
     if (newId) {
         addProduct(Number(newId));
     };
-    selectedProductId.value = null;
+    /* selectedProductId.value = null; */
 })
 
-const handleEnterOnProductRadioList = (event: KeyboardEvent) => {
-    if (event.key === 'Enter') {
+const handleEnterOnProductRadioList = (event: KeyboardEvent, productId: string | number | null) => {
+    console.log({ event, productId });
+    const existingProduct = selectedProducts.value.find(product => product.id === Number(productId));
+    if (event.key === 'Enter' && existingProduct) {
         event.preventDefault();
 
         const quantityInputs = document.querySelectorAll('.quantity-input') as NodeListOf<HTMLInputElement>;
         quantityInputs[0]?.focus();
     }
+    selectedProductId.value = null;
 }
+
+const handleEnterOnPercentagesRadios = (index: number, percentageKey: 'first_wholesale_percentage' | 'second_wholesale_percentage' | 'third_wholesale_percentage' | 'retail_percentage') => {
+    formSaleItems.value[index].selected_percentage = percentageKey;
+    searchInput.value?.inputElement?.focus();
+}
+
+/* DELETE PRODUCTS BY NAVIGATION */
+
+const productToDeleteId = ref<number | null>(null);
+
+watch(productToDeleteId, (newId) => {
+    if (newId) {
+        showDeleteModal.value = false;
+        removeProduct(Number(newId));
+    }
+})
 
 const printReceipt = async (sale: Sale | null) => {
     const printActions: PrintActions = {
@@ -394,9 +423,10 @@ const printReceipt = async (sale: Sale | null) => {
 
                     <ProductRadioList
                         ref="productRadioList"
-                        @keydown.enter="handleEnterOnProductRadioList"
+                        @keydown.enter="handleEnterOnProductRadioList($event, selectedProductId)"
                         v-if="searchResultProducts.length > 0"
                         :products="searchResultProducts"
+                        :selected-products-ids="selectedProducts.map(product => product.id)"
                         v-model="selectedProductId"
                         value-key="id"
                         label-key="name"
@@ -465,22 +495,22 @@ const printReceipt = async (sale: Sale | null) => {
                                 <RadioGroup class="flex gap-2 w-full h-full" v-model="formSaleItems[index].selected_percentage" :name="`sale_items.${index}.selected_percentage`">
                                     <div class="flex flex-col items-center w-full h-full space-y-2 border rounded-lg p-2 has-checked:border-2 has-checked:bg-gray-300">
                                         <Label class="text-center leading-snug">Margen 1<br>{{ moneyFormat(product.first_wholesale_price) }}
-                                            <RadioGroupItem value="first_wholesale_percentage" :tabindex="searchResultProducts.length + index + 3"/>
+                                            <RadioGroupItem value="first_wholesale_percentage" :tabindex="searchResultProducts.length + index + 3" @keydown.enter.prevent="handleEnterOnPercentagesRadios(index, 'first_wholesale_percentage')"/>
                                         </Label>
                                     </div>
                                     <div class="flex flex-col items-center w-full h-full space-y-2 border rounded-lg p-2 has-checked:border-2 has-checked:bg-gray-300">
                                         <Label class="text-center leading-snug">Margen 2<br>{{ moneyFormat(product.second_wholesale_price) }}
-                                            <RadioGroupItem value="second_wholesale_percentage" :tabindex="searchResultProducts.length + index + 3"/>
+                                            <RadioGroupItem value="second_wholesale_percentage" :tabindex="searchResultProducts.length + index + 3" @keydown.enter.prevent="handleEnterOnPercentagesRadios(index, 'second_wholesale_percentage')"/>
                                         </Label>
                                     </div>
                                     <div class="flex flex-col items-center w-full h-full space-y-2 border rounded-lg p-2 has-checked:border-2 has-checked:bg-gray-300">
                                         <Label class="text-center leading-snug">Margen 3<br>{{ moneyFormat(product.third_wholesale_price) }}
-                                            <RadioGroupItem value="third_wholesale_percentage" :tabindex="searchResultProducts.length + index + 3"/>
+                                            <RadioGroupItem value="third_wholesale_percentage" :tabindex="searchResultProducts.length + index + 3" @keydown.enter.prevent="handleEnterOnPercentagesRadios(index, 'third_wholesale_percentage')"/>
                                         </Label>
                                     </div>
                                     <div v-if="formSaleItems[index].is_retail_sale" class="flex flex-col items-center w-full h-full space-y-2 border rounded-lg p-2 has-checked:border-2 has-checked:bg-gray-300">
                                         <Label class="text-center leading-snug">Margen menudeo<br>{{ moneyFormat(product.retail_price) }}
-                                            <RadioGroupItem value="retail_percentage" :tabindex="searchResultProducts.length + index + 3"/>
+                                            <RadioGroupItem value="retail_percentage" :tabindex="searchResultProducts.length + index + 3" @keydown.enter.prevent="handleEnterOnPercentagesRadios(index, 'retail_percentage')"/>
                                         </Label>
                                     </div>
                                 </RadioGroup>
@@ -639,6 +669,30 @@ const printReceipt = async (sale: Sale | null) => {
                 <h2 class="font-medium text-lg">Ventas</h2>
                 <DataTable :columns="columns" :data="props.sales"/>
             </div>
+
+            <!-- Delete alert -->
+            <AlertDialog v-model:open="showDeleteModal" @keydown.escape="showDeleteModal = false">
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Eliminar producto</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Selecciona producto a eliminar
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <ProductRadioList
+                        ref="deleteProductRadioList"
+                        v-if="selectedProducts.length > 0"
+                        :products="selectedProducts"
+                        v-model="productToDeleteId"
+                        value-key="id"
+                        label-key="name"
+                        show-price
+                        :disabled="false"
+                        from-sales-page
+                        class="max max-h-72 overflow-y-auto"
+                    />
+                </AlertDialogContent>
+            </AlertDialog>
 
             <!-- Message alert -->
             <AlertDialog v-model:open="showMessageAlert">
