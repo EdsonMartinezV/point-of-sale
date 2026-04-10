@@ -26,6 +26,20 @@ export const columns: ColumnDef<Sale>[] = [
     },
   },
   {
+    accessorKey: 'folio',
+    header: ({ column }) => {
+      return h(Button, {
+        variant: 'ghost',
+        onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+      }, () => ['Folio', h(column.getIsSorted() ? (column.getIsSorted() === 'asc' ? ChevronUp : ChevronDown) : ArrowUpDown, { class: 'ml-2 h-4 w-4' })])
+    },
+    cell: ({ row }) => {
+        /* You can format here */
+        return h('div', { class: 'text-left font-medium' }, row.getValue('folio'))
+    },
+    sortingFn: 'alphanumeric',
+  },
+  {
     accessorKey: 'created_by',
     header: ({ column }) => {
       return h(Button, {

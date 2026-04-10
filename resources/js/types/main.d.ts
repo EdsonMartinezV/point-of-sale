@@ -101,6 +101,7 @@ export interface Sale {
     created_at: string;
     sale_items: SaleItem[];
     total_articles: number;
+    folio: string;
 }
 
 export interface PrintArticle {

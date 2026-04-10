@@ -20,6 +20,9 @@ class SaleResource extends JsonResource
         $integerPart = $numberFormatter->format((int)$totalParts[0]);
         $decimalPart = $totalParts[1] ?? '00';
 
+        $month = str_pad((new Carbon($this->created_at))->month, 2, '0', STR_PAD_LEFT);
+        $year = str_pad(substr((new Carbon($this->created_at))->year, -2), 2, '0', STR_PAD_LEFT);
+
         return [
             'id' => $this->id,
             'client' => $this->client,
@@ -31,6 +34,7 @@ class SaleResource extends JsonResource
             'created_at' => new Carbon($this->created_at)->toDateTimeString('minute'),
             'sale_items' => SaleItemResource::collection($this->whenLoaded('saleItems')),
             'total_articles' => $this->saleItems->sum('quantity'),
+            'folio' => $month . $year . str_pad(substr($this->id, -6), 6, '0', STR_PAD_LEFT),
         ];
     }
 }

@@ -314,7 +314,7 @@ const printReceipt = async (sale: Sale | null) => {
                 content: 'Atendio: MARTIN GOMEZ\n',
             },{
                 action: 'text',
-                content: '', /* TO DO print folio */
+                content: `FOLIO: ${sale?.folio}\n`,
             },{
                 action: 'text',
                 content: '- - - - - - - - - - - - - - - - - - - -\n'
@@ -765,7 +765,7 @@ const handleEscapeOnSaleAlert = async () => {
                     <AlertDialogHeader class="flex flex-row justify-between items-center">
                         <div>
                             <AlertDialogTitle>{{ saleToShow?.created_at }}</AlertDialogTitle>
-                            <AlertDialogDescription>Detalles de la venta</AlertDialogDescription>
+                            <AlertDialogDescription>Folio: {{ saleToShow?.folio }}</AlertDialogDescription>
                         </div>
                         <Button @click.prevent="printReceipt(saleToShow)" :tabindex="searchResultProducts.length + selectedProducts.length + 8">Imprimir Recibo</Button>
                     </AlertDialogHeader>
