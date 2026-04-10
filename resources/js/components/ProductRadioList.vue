@@ -42,7 +42,6 @@ const moneyFormat = (amount: number | undefined) => {
 }
 
 const handleSelectFromSales = (event: KeyboardEvent, value: string | number) => {
-  console.log({ props: props.selectedProductsIds, value });
   if (event.key === 'Enter' && !props.selectedProductsIds?.includes(Number(value))) {
     model.value = value;
   }

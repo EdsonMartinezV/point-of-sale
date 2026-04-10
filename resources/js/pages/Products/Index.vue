@@ -100,6 +100,13 @@ const nameInput = ref<typeof Input | null>(null);
 onMounted(async () => {
     await nextTick();
     nameInput.value?.inputElement?.focus();
+
+    window.addEventListener('keydown', (event: KeyboardEvent) => {
+        if (event.key === 'F8') {
+            event.preventDefault();
+            nameInput.value?.inputElement?.focus();
+        }
+    })
 });
 
 onUpdated(async () => {

@@ -21,7 +21,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
@@ -47,13 +47,23 @@ const table = useVueTable({
     get sorting() { return sorting.value },
     get globalFilter() { return globalFilter.value }
   },
-})
+});
+
+const searchBox = ref<typeof Input | null>(null);
+onMounted(() => {
+  window.addEventListener('keydown', (event: KeyboardEvent) => {
+    if (event.key === 'F11') {
+      event.preventDefault();
+      searchBox.value?.inputElement?.focus();
+    }
+  })
+});
 </script>
 
 <template>
   <div class="flex items-center py-4">
     <div class="flex items-center py-4">
-      <Input class="max-w-sm" placeholder="Buscar"
+      <Input class="max-w-sm" placeholder="Buscar" ref="searchBox"
         :modelValue="globalFilter ?? ''"
         @update:modelValue="(value) => (globalFilter = String(value))" />
     </div>

@@ -261,7 +261,6 @@ watch(selectedProductId, (newId) => {
 })
 
 const handleEnterOnProductRadioList = (event: KeyboardEvent, productId: string | number | null) => {
-    console.log({ event, productId });
     const existingProduct = selectedProducts.value.find(product => product.id === Number(productId));
     if (event.key === 'Enter' && existingProduct) {
         event.preventDefault();
