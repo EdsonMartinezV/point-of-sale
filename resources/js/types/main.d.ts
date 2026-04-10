@@ -94,11 +94,13 @@ export interface Sale {
     id: number;
     client: string;
     total: number;
+    spelled_total: string;
     paid_amount: number;
     change_amount: number;
     created_by: string;
     created_at: string;
     sale_items: SaleItem[];
+    total_articles: number;
 }
 
 export interface PrintArticle {
@@ -106,6 +108,7 @@ export interface PrintArticle {
     name: string;
     unitPrice: string;
     total: string;
+    measureUnit: string;
 }
 
 export interface PrintActions {

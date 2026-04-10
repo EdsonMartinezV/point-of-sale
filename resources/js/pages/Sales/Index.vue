@@ -293,59 +293,96 @@ const printReceipt = async (sale: Sale | null) => {
         header: [
             {
                 action: 'text',
-                content: 'Abarrotes MG\n',
+                content: '< Abarrotes * M G * >\n',
             },{
                 action: 'text',
-                content: `${new Date().toLocaleString()}\n`,
+                content: 'Martin Gomez\n',
             },{
                 action: 'text',
-                content: '--------------------------------\n'
+                content: 'R.F.C. RFCT-888888-888\n',
+            },{
+                action: 'text',
+                content: 'Local 1034; Int. Mercado d/l Ancianos\n',
+            },{
+                action: 'text',
+                content: 'Tuxtla Gutierrez, Chiapas    CP 29000\n',
+            },{
+                action: 'text',
+                content: `FECHA / HORA ${new Date().toLocaleString()}\n`,
+            },{
+                action: 'text',
+                content: 'Atendio: MARTIN GOMEZ\n',
+            },{
+                action: 'text',
+                content: '', /* TO DO print folio */
+            },{
+                action: 'text',
+                content: '- - - - - - - - - - - - - - - - - - - -\n'
+            },{
+                action: 'text',
+                content: `CLIENTE: ${sale?.client}\n`
+            },{
+                action: 'text',
+                content: '- - - - - - - - - - - - - - - - - - - -\n'
             }
         ],
         articles: [],
         totals: [
             {
                 action: 'text',
-                content: '--------------------------------\n'
+                content: '=======================================\n'
             },{
                 action: 'text',
-                content: `Total: ${moneyFormat(sale?.total)}\n`
+                content: `Total: ${moneyFormat(sale?.total).padStart(15, ' ')}\n`
             },{
                 action: 'text',
-                content: `Paga con: ${moneyFormat(sale?.paid_amount)}\n`
+                content: `Paga con: ${moneyFormat(sale?.paid_amount).padStart(15, ' ')}\n`
             },{
                 action: 'text',
-                content: `Cambio: ${moneyFormat(sale?.change_amount)}\n`
-            },
+                content: `Cambio: ${moneyFormat(sale?.change_amount).padStart(15, ' ')}\n`
+            },{
+                action: 'text',
+                content: '=======================================\n'
+            }
         ],
         footer: [
             {
                 action: 'text',
-                content: `${sale?.client}`,
+                content: `(${sale?.spelled_total})\n`,
+            },
+            {
+                action: 'text',
+                content: `Total articulos: ${sale?.total_articles}\n`,
             },
             {
                 action: 'text',
                 content: '¡Gracias por su compra!\n',
+            },
+            {
+                action: 'text',
+                content: 'Regrese pronto\n',
             }
         ],
     }
 
     sale?.sale_items.forEach(item => {
         const quantity = item.quantity;
-        const name = item.product.name.length > 16 ? item.product.name.substring(0, 13) + '...' : item.product.name;
+        const name = item.product.name.length > 20 ? item.product.name.substring(0, 13) : item.product.name;
         const unitPrice = moneyFormat(item.total / item.quantity);
         const total = moneyFormat(item.total);
+        const measureUnit = (item.is_retail_sale ? item.product.retail_measure_unit?.abbreviation : item.product.measure_unit?.abbreviation) || '';
 
         printActions.articles.push({
             quantity,
             name,
             unitPrice,
-            total
+            total,
+            measureUnit
         });
     });
 
     try {
-        const response = await fetch(`${posPrinterApiUrl}/print`, {
+        const response = await fetch(`${posPrinterApiUrl}/test-print`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
